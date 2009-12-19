@@ -61,6 +61,5 @@ umount /proc
 # the real password set OpenVZ!
 passwd -L root
 
-
-
-
+# remove this installation script
+rm ./$0

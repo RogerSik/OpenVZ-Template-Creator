@@ -29,6 +29,6 @@ cd $input_path/var/log
 rm -f /mnt/dice/var/log/*.0 /mnt/dice/var/log/*.1
 
 echo "Whats the name for that template? (without tar.gz!)"
-echo "example ubuntu-8.04.3-i386"
+echo "example ubuntu-8.04.3-i386" 
 read input_template_name
-cd $input_path &&  tar --numeric-owner -zcf ~/$input_template_name.tar.gz .
+cd $input_path &&  tar --numeric-owner -zcf ~/$input_template_name.tar.gz . && echo $input_template_name".tar.gz saved under ~/"

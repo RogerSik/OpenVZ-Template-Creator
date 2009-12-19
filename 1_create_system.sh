@@ -11,7 +11,7 @@ echo "Supported: debian | ubuntu"
 read input_host_distri
 
 echo "Create and clear the path"
-mkdir input_path
+mkdir $input_path
 rm -rf $input_path/* 
 
 echo "clear umount"
@@ -21,7 +21,7 @@ umount $input_path//sys
 
 case "$input_host_distri" in
      ubuntu|debian)
-		echo "Download and installatioon the latest debootstrap."
+		echo "Download and installation the latest debootstrap."
 		wget http://files.yoschi.cc/debs/debootstrap.deb
 		dpkg -i debootstrap.deb && rm debootstrap.deb
 		;;
@@ -31,9 +31,11 @@ case "$input_host_distri" in
 		;; esac
 
 clear
+
 echo "What distri want you install?"
 echo "Supported:"
-echo "Ubuntu Hardy/Karmic"
+echo "* Ubuntu Hardy (hardy)"
+echo "* Ubuntu Karmic (karmic)"
 read input_distri
 
 echo "i386 or amd64?"
