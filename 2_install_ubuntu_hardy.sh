@@ -35,7 +35,7 @@ EOF
 
 aptitude update
 aptitude dist-upgrade -y
-aptitude install language-pack-en-base bash-completion logrotate ssh lsof nano quota rsync vim -y --without-recommends
+aptitude install language-pack-en-base bash-completion logrotate ssh lsof nano quota rsync vim wget -y --without-recommends
 aptitude clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
@@ -49,7 +49,7 @@ echo "hostname" > /etc/hostname
 echo "127.0.0.1 localhost.localdomain localhost" > /etc/hosts
 
 # Note: the warning "/sbin/MAKEDEV: warning: can't read /proc/devices" is safe to ignore.
-cd /dev && /sbin/MAKEDEV ptyp
+cd /dev && /sbin/MAKEDEV ptyp && cd /
 
 # Because klogd will hang up the system
 update-rc.d -f klogd remove
@@ -59,7 +59,4 @@ umount /proc
 #umount /sys
 
 # the real password set OpenVZ!
-passwd -L root
-
-# remove this installation script
-rm ./$0
+passwd

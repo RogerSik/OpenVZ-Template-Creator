@@ -53,7 +53,7 @@ EOF
 
 apt-get update
 apt-get dist-upgrade -y
-apt-get install aptitude language-pack-en-base bash-completion logrotate ssh lsof nano quota rsync vim -y --without-recommends
+apt-get install aptitude language-pack-en-base bash-completion logrotate ssh lsof nano quota rsync vim wget -y --without-recommends
 apt-get clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
