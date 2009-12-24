@@ -3,6 +3,7 @@
 mkdir /etc/init
 cat << EOF > /etc/init/openvz.conf
 # OpenVZ – Fix init sequence to have OpenVZ working with upstart
+# by http://blog.bodhizazen.net/linux/openvz-ubuntu-9-10-templates/
 description “Fix OpenVZ”
 
 start on startup

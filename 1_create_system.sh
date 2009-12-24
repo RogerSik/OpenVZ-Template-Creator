@@ -36,8 +36,10 @@ echo "What distri want you install?"
 echo "Supported:"
 echo "* Ubuntu Hardy (hardy)"
 echo "* Ubuntu Karmic (karmic)"
+echo ""
 read input_distri
 
+echo ""
 echo "i386 or amd64?"
 read input_arch
 
