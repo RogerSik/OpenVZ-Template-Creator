@@ -35,12 +35,11 @@ EOF
 
 aptitude update
 aptitude dist-upgrade -y
-aptitude install language-pack-en-base bash-completion logrotate ssh lsof nano quota rsync vim wget -y --without-recommends
+aptitude install language-pack-en-base bash-completion logrotate ssh lsof man nano quota rsync vim wget -y --without-recommends
 aptitude clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
 rm -f /etc/mtab
-#cp -R /proc/mounts /etc/mtab
 ln -s /proc/mounts /etc/mtab
 update-rc.d -f mtab.sh remove
 

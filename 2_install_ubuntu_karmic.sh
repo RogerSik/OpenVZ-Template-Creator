@@ -4,7 +4,7 @@ mkdir /etc/init
 cat << EOF > /etc/init/openvz.conf
 # OpenVZ – Fix init sequence to have OpenVZ working with upstart
 # by http://blog.bodhizazen.net/linux/openvz-ubuntu-9-10-templates/
-description “Fix OpenVZ”
+description "Fix OpenVZ"
 
 start on startup
 
@@ -26,9 +26,9 @@ end script
 
 script
 start networking
-initctl emit filesystem –-no-wait
-initctl emit local-filesystems –-no-wait
-initctl emit virtual-filesystems –-no-wait
+initctl emit filesystem --no-wait
+initctl emit local-filesystems --no-wait
+initctl emit virtual-filesystems --no-wait
 init 2
 end script
 EOF
@@ -54,7 +54,7 @@ EOF
 
 apt-get update
 apt-get dist-upgrade -y
-apt-get install aptitude language-pack-en-base bash-completion logrotate ssh lsof nano quota rsync vim wget -y --without-recommends
+apt-get install aptitude language-pack-en-base bash-completion logrotate ssh lsof man nano quota rsync vim wget -y
 apt-get clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
