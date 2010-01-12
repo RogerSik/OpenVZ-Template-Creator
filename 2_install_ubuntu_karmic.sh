@@ -1,5 +1,15 @@
 #!/bin/bash
 
+rm -fr /lib/udev
+initctl stop tty1
+initctl stop tty2
+initctl stop tty3
+initctl stop tty4
+initctl stop tty5
+initctl stop tty6
+rm /etc/event.d/tty*
+ln -s /bin/true /sbin/modprobe
+
 mkdir /etc/init
 cat << EOF > /etc/init/openvz.conf
 # OpenVZ – Fix init sequence to have OpenVZ working with upstart
@@ -54,13 +64,19 @@ EOF
 
 apt-get update
 apt-get dist-upgrade -y
-apt-get install aptitude language-pack-en-base bash-completion logrotate ssh lsof man nano quota rsync vim wget -y
+apt-get install aptitude language-pack-en-base bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y
 apt-get clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
 rm -f /etc/mtab
 ln -s /proc/mounts /etc/mtab
 update-rc.d -f mtab.sh remove
+
+# tun and fuse device create
+mkdir -p /dev/net
+mknod /dev/net/tun c 10 200
+chmod 600 /dev/net/tun
+mknod /dev/fuse c 10 229
 
 # Netzwerk
 echo "hostname" > /etc/hostname
@@ -73,4 +89,5 @@ cd /dev && /sbin/MAKEDEV ptyp && cd /
 umount /proc
 #umount /sys
 
+# the real password set OpenVZ!
 passwd

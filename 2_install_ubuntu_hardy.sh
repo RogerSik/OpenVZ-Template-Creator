@@ -1,5 +1,8 @@
 #!/bin/bash
-
+#
+# OpenVZ Template OS Creator
+# http://github.com/RogerSik/OpenVZ-Template-Creator
+#
 # Remove not necessary programs
 dpkg -P ubuntu-minimal wpasupplicant wireless-tools \
   udev pcmciautils initramfs-tools console-setup \
@@ -10,7 +13,12 @@ dpkg -P ubuntu-minimal wpasupplicant wireless-tools \
   laptop-detect
 
 rm -fr /lib/udev
-initctl stop tty{1,2,3,4,5,6}
+initctl stop tty1
+initctl stop tty2
+initctl stop tty3
+initctl stop tty4
+initctl stop tty5
+initctl stop tty6
 rm /etc/event.d/tty*
 ln -s /bin/true /sbin/modprobe
 
@@ -35,13 +43,19 @@ EOF
 
 aptitude update
 aptitude dist-upgrade -y
-aptitude install language-pack-en-base bash-completion logrotate ssh lsof man nano quota rsync vim wget -y --without-recommends
+aptitude install language-pack-en-base bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y --without-recommends
 aptitude clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
 rm -f /etc/mtab
 ln -s /proc/mounts /etc/mtab
 update-rc.d -f mtab.sh remove
+
+# tun and fuse device create
+mkdir -p /dev/net
+mknod /dev/net/tun c 10 200
+chmod 600 /dev/net/tun
+mknod /dev/fuse c 10 229
 
 # Network
 echo "hostname" > /etc/hostname
