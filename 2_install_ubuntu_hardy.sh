@@ -12,15 +12,7 @@ dpkg -P ubuntu-minimal wpasupplicant wireless-tools \
   ntpdate eject pciutils tasksel tasksel-data \
   laptop-detect
 
-rm -fr /lib/udev
-initctl stop tty1
-initctl stop tty2
-initctl stop tty3
-initctl stop tty4
-initctl stop tty5
-initctl stop tty6
 rm /etc/event.d/tty*
-ln -s /bin/true /sbin/modprobe
 
 cat << EOF > /etc/apt/sources.list
 deb http://de.archive.ubuntu.com/ubuntu hardy main #restricted universe multiverse

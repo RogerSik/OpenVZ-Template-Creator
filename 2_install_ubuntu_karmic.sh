@@ -1,14 +1,10 @@
 #!/bin/bash
+#
+# OpenVZ Template OS Creator
+# http://github.com/RogerSik/OpenVZ-Template-Creator
+#
 
-rm -fr /lib/udev
-initctl stop tty1
-initctl stop tty2
-initctl stop tty3
-initctl stop tty4
-initctl stop tty5
-initctl stop tty6
-rm /etc/event.d/tty*
-ln -s /bin/true /sbin/modprobe
+rm /etc/init/tty*
 
 mkdir /etc/init
 cat << EOF > /etc/init/openvz.conf
