@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# OpenVZ Template OS Creator
+# http://github.com/RogerSik/OpenVZ-Template-Creator
+#
 
 echo "Where is the new system? (default /mnt/dice)"
 read input_path
