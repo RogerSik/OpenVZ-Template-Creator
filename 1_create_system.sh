@@ -34,8 +34,10 @@ clear
 
 echo "What distri want you install?"
 echo "Supported:"
-echo "* Ubuntu Hardy (hardy)"
-echo "* Ubuntu Karmic (karmic)"
+echo "* Ubuntu 8.04 - Hardy Haron (hardy)"
+echo "* Ubuntu 8.10 - Intrepid Ibex (intrepid)"
+echo "* Ubuntu 9.04 - Jaunty  Jackalope (jaunty)"
+echo "* Ubuntu 9.10 - Karmic Koala (karmic)"
 echo ""
 read input_distri
 

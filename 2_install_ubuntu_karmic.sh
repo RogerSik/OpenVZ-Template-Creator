@@ -60,7 +60,7 @@ EOF
 
 apt-get update
 apt-get dist-upgrade -y
-apt-get install aptitude bc language-pack-en language-pack-de bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y
+apt-get install anacron aptitude bc language-pack-en language-pack-de bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y
 apt-get clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 

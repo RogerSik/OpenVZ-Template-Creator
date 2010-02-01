@@ -35,7 +35,7 @@ EOF
 
 aptitude update
 aptitude dist-upgrade -y
-aptitude install bc language-pack-en language-pack-de bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y --without-recommends
+aptitude install anacron bc language-pack-en language-pack-de bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y --without-recommends
 aptitude clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
