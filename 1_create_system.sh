@@ -10,7 +10,7 @@ echo "What is your host distro?"
 echo "Supported: debian | ubuntu"
 read input_host_distri
 
-echo "clear umount"
+echo "clean umount"
 umount $input_path/dev
 umount $input_path/proc
 umount $input_path/sys
@@ -38,7 +38,8 @@ echo "* Ubuntu 8.04 - Hardy Haron (hardy)"
 echo "* Ubuntu 8.10 - Intrepid Ibex (intrepid)"
 echo "* Ubuntu 9.04 - Jaunty  Jackalope (jaunty)"
 echo "* Ubuntu 9.10 - Karmic Koala (karmic)"
-echo ""
+echo "* Ubuntu 10.04 - Lucid Lync (lucid)"
+echo " = "
 read input_distri
 
 echo ""
@@ -46,14 +47,14 @@ echo "i386 or amd64?"
 echo ""
 read input_arch
 
-debootstrap --arch $input_arch $input_distri $input_path
+debootstrap --variant=minbase --arch $input_arch $input_distri $input_path
 
 wget http://files.yoschi.cc/vpsmem
 chmod +x vpsmem
 mv vpsmem $input_path/usr/local/bin
 
 #mount -o bind /dev $input_path/dev
-mount -t proc none $input_path/proc # because openssh-server will not configured to the end
+mount -t proc none $input_path/proc # because another openssh-server will not configured to the end
 #mount -t sysfs none $input_path/sys
 
 chroot $input_path
