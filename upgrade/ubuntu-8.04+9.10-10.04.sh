@@ -4,6 +4,7 @@
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
 
+mkdir /etc/init/
 cat << EOF > /etc/init/openvz.conf
 # OpenVZ - Fix init sequence to have OpenVZ working with upstart
 # by Stephane Graber [1] modified by bodhi.zazen [2] to work with Proxmox 
@@ -40,22 +41,10 @@ init 2
 end script
 EOF
 
-cat << EOF > /etc/apt/sources.list
-deb http://de.archive.ubuntu.com/ubuntu lucid main restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu lucid main restricted universe multiverse
-
-deb http://de.archive.ubuntu.com/ubuntu lucid-updates main restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu lucid-updates main restricted universe multiverse
-
-deb http://de.archive.ubuntu.com/ubuntu lucid-security main restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu lucid-security main restricted universe multiverse
-
-#deb http://de.archive.ubuntu.com/ubuntu lucid-backports main #restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu lucid-backports main #restricted universe multiverse
-EOF
-
-apt-get update
+apt-get update 
 apt-get dist-upgrade -y
+apt-get install update-manager-core -y
+do-release-upgrade
 
 # because another a upgrade would begins the booting problems again
 echo "mountall hold"|dpkg --set-selections
