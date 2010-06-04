@@ -4,6 +4,10 @@
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
 
+#echo "Which distribution want you clean up?"
+#echo "supported: debian ubuntu"
+#read input_distri
+#echo "*"
 echo "Where is the new system? (default /mnt/dice)"
 read input_path
 
@@ -13,6 +17,15 @@ umount $input_path/sys
 
 rm -f $input_path/etc/ssh/ssh_host_*
 rm -f $input_path/etc/ssh/moduli
+
+#case $input_distri in
+#	debian|ubuntu)
+#		;;
+#	'gentoo')
+#		;;	       
+#     *)
+#		exit 0
+#		;; esac
 
 # Each individual VE should have its own pair of SSH host keys. 
 # The code below will wipe out the existing SSH keys and instruct the newly-created VE to create new SSH keys on first boot.
