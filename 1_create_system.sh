@@ -6,10 +6,6 @@
 echo "Where to create the system? (default /mnt/dice)"
 read input_path
 
-echo "What is your host distro?"
-echo "Supported: debian | ubuntu"
-read input_host_distri
-
 echo "clean umount"
 umount $input_path/dev
 umount $input_path/proc
@@ -19,19 +15,6 @@ echo "Clear/Create the path"
 rm -rf $input_path/* 
 mkdir $input_path
 
-# TODO modify for use with gentoo
-case "$input_host_distri" in
-     ubuntu|debian)
-		echo "Download and installation the latest debootstrap."
-		wget http://files.yoschi.cc/debs/debootstrap.deb
-		dpkg -i debootstrap.deb
-		rm debootstrap.deb
-		;;
-     *)
-		echo "Distri" $input_host_distri "not supported yet. Sorry."
-		exit 0
-		;; esac
-clear
 
 echo "What distri want you install?"
 echo "Supported:"
@@ -44,8 +27,25 @@ echo "* Gentoo - current (gentoo)"
 echo " = "
 read input_distri
 
-case "$input_host_distri" in
+case "$input_distri" in
      ubuntu|debian)
+		echo "What is your host distro?"
+		echo "Supported: debian | ubuntu"
+		read input_host_distri
+
+		case "$input_host_distri" in
+		     ubuntu|debian)
+				echo "Download and installation the latest debootstrap."
+				wget http://files.yoschi.cc/debs/debootstrap.deb
+				dpkg -i debootstrap.deb
+				rm debootstrap.deb
+				;;
+		     *)
+				echo "Distri" $input_host_distri "not supported yet. Sorry."
+				exit 0
+				;; esac
+		clear
+
 		echo ""
 		echo "i386 or amd64?"
 		echo ""
