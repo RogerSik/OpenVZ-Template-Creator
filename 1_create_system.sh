@@ -66,19 +66,16 @@ case "$input_distri" in
 				read input_variant
 				case "$input_variant" in
 					i486)
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/x86/current-stage3/stage3-i486-*.tar.bz2
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/x86/current-stage3/stage3-i486-*.tar.bz2.DIGEST
+						DOWNLOAD_NAME="stage3-i486"
 						;;
 					i686)
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/x86/current-stage3/stage3-i686-*.tar.bz2
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/x86/current-stage3/stage3-i686-*.tar.bz2.DIGEST
+						DOWNLOAD_NAME="stage3-i686"
 						;;
 					i686-hardened)
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/x86/current-stage3/hardened/stage3-i686-hardened-*.tar.bz2
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/x86/current-stage3/hardened/stage3-i686-hardened-*.tar.bz2
+						DOWNLAOD_NAME="hardened/stage3-i686-hardened"
 						;;
 					*)
-						echo "Variante" $input_variant "not supported yet. Sorry."
+						echo "Variant" $input_variant "not supported yet. Sorry."
                 				exit 0
                 				;; esac
 				;; #END x86
@@ -90,16 +87,13 @@ case "$input_distri" in
 				case "$input_variant" in
 					nomultilib)
 						touch $input_path/.nomultilib
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/stage3-amd64-*.tar.bz2
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/stage3-amd64-*.tar.bz2.DIGEST
+						DOWNLAOD_NAME="stage3-amd64"
 						;;
 					multilib)
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/stage3-amd64-*.tar.bz2
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/stage3-amd64-*.tar.bz2.DIGEST
+						DOWNLAOD_NAME="stage3-amd64"
 						;;
 					nomultilib-hardened)
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/hardened/stage3-amd64-hardened+nomultilib-*.tar.bz2
-						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/hardened/stage3-amd64-hardened+nomultilib-*.tar.bz2.DIGEST
+						DOWNLAOD_NAME="hardened/stage3-amd64-hardened++nomultilib"
 						;;
 					*)
 						echo "Variante" $input_variant "not supported yet. Sorry."
@@ -111,22 +105,32 @@ case "$input_distri" in
 				exit 0
 				;; esac
 
+		mkdir openvz-template-creator-gentooinst-tmp
+		cd openvz-template-creator-gentooinst-tmp
+
+		wget ftp://distfiles.gentoo.org/pub/gentoo/releases/"$input_arch"/current-stage3/"$DOWNLOAD_NAME"*.tar.bz2
+		wget ftp://distfiles.gentoo.org/pub/gentoo/releases/"$input_arch"/current-stage3/"$DOWNLOAD_NAME"*.tar.bz2.DIGESTS
+		wget ftp://distfiles.gentoo.org/pub/gentoo/releases/"$input_arch"/current-stage3/"$DOWNLOAD_NAME"*.tar.bz2.CONTENTS
+
 		wget ftp://distfiles.gentoo.org/pub/gentoo/snapshots/portage-latest.tar.bz2
 		wget ftp://distfiles.gentoo.org/pub/gentoo/snapshots/portage-latest.tar.bz2.md5sum
 		clear
-		md5sum -c stage3*.DIGEST
+		md5sum -c stage3*.DIGESTS
 		md5sum -c portage-latest.tar.bz2.md5sum
 		echo ""
 		echo ""
 		echo "Please verify that both, the stage3 and the portage-latest archive have passed the md5sum check. If so please enter \'y\', otherwise press Ctrl+C to start over"
 		read input_valid
+		echo "Extracting Stage3"
 		#TODO Ordentliche Abfrage einbauen
 		tar xjpf stage3*.tar.bz2 -C $input_path
+		echo "Extracting Portage tree"
 		tar xjpf portage-latest.tar.bz2 -C $input_path/usr/
-		rm -i stage3*.tar.bz2*
-		rm -i portage-latest*.tar.bz2*
+		echo "Remove install Archives"
+		rm -ri openvz-template-creator-gentooinst-tmp
+
+		echo "Preparing chroot"
 		cp -L /etc/resolv.conf $input_path/etc/
-		#TODO evtl. wieder unten fuer alle mounten
 		mount -o bind /dev $input_path/dev
 		;; #END gentoo
 
