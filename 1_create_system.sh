@@ -90,12 +90,17 @@ case "$input_host_distri" in
 				case "$input_variant" in
 					nomultilib)
 						touch $input_path/.nomultilib
+						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/stage3-amd64-*.tar.bz2
+						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/stage3-amd64-*.tar.bz2.DIGEST
+						;;
 					multilib)
 						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/stage3-amd64-*.tar.bz2
 						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/stage3-amd64-*.tar.bz2.DIGEST
+						;;
 					nomultilib-hardened)
 						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/hardened/stage3-amd64-hardened+nomultilib-*.tar.bz2
 						wget ftp://distfiles.gentoo.org/pub/gentoo/releases/amd64/current-stage3/hardened/stage3-amd64-hardened+nomultilib-*.tar.bz2.DIGEST
+						;;
 					*)
 						echo "Variante" $input_variant "not supported yet. Sorry."
                 				exit 0
