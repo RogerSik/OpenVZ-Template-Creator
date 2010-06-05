@@ -72,7 +72,7 @@ case "$input_distri" in
 						DOWNLOAD_NAME="stage3-i686"
 						;;
 					i686-hardened)
-						DOWNLAOD_NAME="hardened/stage3-i686-hardened"
+						DOWNLOAD_NAME="hardened/stage3-i686-hardened"
 						;;
 					*)
 						echo "Variant" $input_variant "not supported yet. Sorry."
@@ -87,13 +87,13 @@ case "$input_distri" in
 				case "$input_variant" in
 					nomultilib)
 						touch $input_path/.nomultilib
-						DOWNLAOD_NAME="stage3-amd64"
+						DOWNLOAD_NAME="stage3-amd64"
 						;;
 					multilib)
-						DOWNLAOD_NAME="stage3-amd64"
+						DOWNLOAD_NAME="stage3-amd64"
 						;;
 					nomultilib-hardened)
-						DOWNLAOD_NAME="hardened/stage3-amd64-hardened++nomultilib"
+						DOWNLOAD_NAME="hardened/stage3-amd64-hardened+nomultilib"
 						;;
 					*)
 						echo "Variante" $input_variant "not supported yet. Sorry."
@@ -121,12 +121,14 @@ case "$input_distri" in
 		echo ""
 		echo "Please verify that both, the stage3 and the portage-latest archive have passed the md5sum check. If so please enter \'y\', otherwise press Ctrl+C to start over"
 		read input_valid
-		echo "Extracting Stage3"
 		#TODO Ordentliche Abfrage einbauen
+
+		echo "Extracting Stage3"
 		tar xjpf stage3*.tar.bz2 -C $input_path
 		echo "Extracting Portage tree"
 		tar xjpf portage-latest.tar.bz2 -C $input_path/usr/
 		echo "Remove install Archives"
+		cd ..
 		rm -ri openvz-template-creator-gentooinst-tmp
 
 		echo "Preparing chroot"
