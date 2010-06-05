@@ -56,8 +56,8 @@ EOF
 
 apt-get install gpgv nano --force-yes -y
 apt-get update
-apt-get dist-upgrade -y
-apt-get install anacron aptitude bc language-pack-en language-pack-de bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y
+apt-get dist-upgrade -y --force-yes
+apt-get install anacron aptitude bc language-pack-en language-pack-de bash-completion inetutils-ping logrotate ssh sshfs syslog-ng lsof man nano quota rsync vim wget whiptail -y --force-yes
 apt-get clean
 apt-get autoremove
 

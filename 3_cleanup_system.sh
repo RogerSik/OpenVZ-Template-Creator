@@ -11,12 +11,14 @@ umount $input_path/dev
 umount $input_path/proc
 umount $input_path/sys
 
+# General cleanup
 rm -f $input_path/etc/ssh/ssh_host_*
 rm -f $input_path/etc/ssh/moduli
 
 echo "Which distribution are you installing again?"
 echo "supported: debian ubuntu gentoo"
 read input_distri
+
 case "$inut_distri" in
 	debian|ubuntu)
 		# Each individual VE should have its own pair of SSH host keys. 
@@ -47,7 +49,8 @@ case "$inut_distri" in
 		rm -ri .ssh
 		;; #END gentoo
 
+
 echo "Whats the name for that template? (without tar.gz!)"
-echo "example ubuntu-8.04.3-i386" 
+echo "example ubuntu-8.04.3-i386"
 read input_template_name
 cd $input_path &&  tar --numeric-owner -zcf ~/$input_template_name.tar.gz . && echo $input_template_name".tar.gz saved under ~/"

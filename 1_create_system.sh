@@ -142,10 +142,8 @@ case "$input_distri" in
                 ;; esac
 clear
 
-
-wget http://files.yoschi.cc/vpsmem
-chmod +x vpsmem
-mv vpsmem $input_path/usr/local/bin
+wget -q http://files.yoschi.cc/vpsmem -P $input_path/usr/local/bin
+chmod +x $input_path/usr/local/bin/vpsmem
 
 #mount -o bind /dev $input_path/dev
 mount -t proc none $input_path/proc # because another openssh-server will not configured to the end
