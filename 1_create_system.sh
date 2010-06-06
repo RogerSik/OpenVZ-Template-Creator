@@ -3,19 +3,6 @@
 # OpenVZ Template OS Creator
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
-echo "Where to create the system? (default /mnt/dice)"
-read input_path
-
-echo "clean umount"
-umount $input_path/dev
-umount $input_path/proc
-umount $input_path/sys
-
-echo "Clear/Create the path"
-rm -rf $input_path/* 
-mkdir $input_path
-
-
 echo "What distri want you install?"
 echo "Supported:"
 echo "* Ubuntu 8.04 - Hardy Haron (hardy)"
@@ -26,6 +13,18 @@ echo "* Ubuntu 10.04 - Lucid Lync (lucid)"
 echo "* Gentoo - current (gentoo)"
 echo " = "
 read input_distri
+echo ""
+echo "Where to create the system? (default /mnt/dice)"
+read input_path
+
+# clean umount
+umount $input_path/dev  2>/dev/null
+umount $input_path/proc 2>/dev/null
+umount $input_path/sys 2>/dev/null
+
+echo "Clear/Create the path"
+rm -rf $input_path/* 
+mkdir $input_path
 
 case "$input_distri" in
      ubuntu|debian)
