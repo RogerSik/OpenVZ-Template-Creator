@@ -60,7 +60,7 @@ case "$input_distri" in
 		TMP_DIR="openvz-template-creator-gentooinst-tmp"
 		mkdir ${TMP_DIR}
 		cd ${TMP_DIR}
-		
+
 		clear
 		echo ""
 		echo "Please download a stage3 Archive AND the .DIGESTS files as well"
@@ -69,7 +69,7 @@ case "$input_distri" in
 		MIRROR="http://ftp.uni-erlangen.de/pub/mirrors/gentoo/"
 		URL=${MIRROR}"releases/"${input_arch}
 		lynx ${URL}
-		
+
 		wget ${MIRROR}snapshots/portage-latest.tar.bz2
 		wget ${MIRROR}snapshots/portage-latest.tar.bz2.md5sum
 		clear
@@ -102,7 +102,6 @@ case "$input_distri" in
 		echo ""
 		echo "Preparing chroot"
 		cp -L /etc/resolv.conf $input_path/etc/
-		mount -o bind /dev $input_path/dev
 		;; #END gentoo
 
      *)
@@ -114,6 +113,7 @@ clear
 wget -q http://files.yoschi.cc/vpsmem -P $input_path/usr/local/bin
 chmod +x $input_path/usr/local/bin/vpsmem
 
+#if dev is mounted the mknod commands in the install scripts will create the devices on the host machine and not inside the template
 #mount -o bind /dev $input_path/dev
 mount -t proc none $input_path/proc # because another openssh-server will not configured to the end
 #mount -t sysfs none $input_path/sys

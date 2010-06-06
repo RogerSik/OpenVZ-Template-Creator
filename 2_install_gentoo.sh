@@ -14,6 +14,7 @@ rc-update add net.venet0 default
 rc-update add sshd default
 echo "- Addes net.venet0 and sshd to default runlevel" > /root/template-doc/change.log
 
+unmount /dev #ensure that we create the nodes inside the template filesystem and not somwere else (eg. on the host filesystem)
 mkdir -p /dev/net
 mknod /dev/net/tun c 10 200
 chmod 600 /dev/net/tun
@@ -191,5 +192,4 @@ emerge -u portage
 emerge -u gentoolkit
 
 # Thats all
-umount /dev
 umount /proc
