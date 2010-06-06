@@ -54,82 +54,52 @@ case "$input_distri" in
                 ;;
      gentoo)
 		echo ""
-		echo "x86 of amd64?"
+		echo "x86 or amd64?"
 		echo ""
 		read input_arch
-		case "$input_arch" in
-			x86)
-				echo ""
-				echo "i486, i686, or i686-hardened?"
-				echo ""
-				read input_variant
-				case "$input_variant" in
-					i486)
-						DOWNLOAD_NAME="stage3-i486"
-						;;
-					i686)
-						DOWNLOAD_NAME="stage3-i686"
-						;;
-					i686-hardened)
-						DOWNLOAD_NAME="hardened/stage3-i686-hardened"
-						;;
-					*)
-						echo "Variant" $input_variant "not supported yet. Sorry."
-                				exit 0
-                				;; esac
-				;; #END x86
-			amd64)
-				echo ""
-				echo "multilib, nomultilib, or nomultilib-hardened?"
-				echo ""
-				read input_variant
-				case "$input_variant" in
-					nomultilib)
-						touch $input_path/.nomultilib
-						DOWNLOAD_NAME="stage3-amd64"
-						;;
-					multilib)
-						DOWNLOAD_NAME="stage3-amd64"
-						;;
-					nomultilib-hardened)
-						DOWNLOAD_NAME="hardened/stage3-amd64-hardened+nomultilib"
-						;;
-					*)
-						echo "Variante" $input_variant "not supported yet. Sorry."
-                				exit 0
-                				;; esac
-				;; #END amd64
-			*)
-				echo "Arch" $input_arch "not supported yet. Sorry."
-				exit 0
-				;; esac
-
-		mkdir openvz-template-creator-gentooinst-tmp
-		cd openvz-template-creator-gentooinst-tmp
-
-		wget ftp://distfiles.gentoo.org/pub/gentoo/releases/"$input_arch"/current-stage3/"$DOWNLOAD_NAME"*.tar.bz2
-		wget ftp://distfiles.gentoo.org/pub/gentoo/releases/"$input_arch"/current-stage3/"$DOWNLOAD_NAME"*.tar.bz2.DIGESTS
-		wget ftp://distfiles.gentoo.org/pub/gentoo/releases/"$input_arch"/current-stage3/"$DOWNLOAD_NAME"*.tar.bz2.CONTENTS
-
-		wget ftp://distfiles.gentoo.org/pub/gentoo/snapshots/portage-latest.tar.bz2
-		wget ftp://distfiles.gentoo.org/pub/gentoo/snapshots/portage-latest.tar.bz2.md5sum
+		TMP_DIR="openvz-template-creator-gentooinst-tmp"
+		mkdir ${TMP_DIR}
+		cd ${TMP_DIR}
+		
 		clear
-		md5sum -c stage3*.DIGESTS
-		md5sum -c portage-latest.tar.bz2.md5sum
 		echo ""
-		echo ""
-		echo "Please verify that both, the stage3 and the portage-latest archive have passed the md5sum check. If so please enter \'y\', otherwise press Ctrl+C to start over"
-		read input_valid
-		#TODO Ordentliche Abfrage einbauen
+		echo "Please download a stage3 Archive AND the .DIGESTS files as well"
+		echo "(Press Return to start lynx)"
+		read $confirm
+		MIRROR="http://ftp.uni-erlangen.de/pub/mirrors/gentoo/"
+		URL=${MIRROR}"releases/"${input_arch}
+		lynx ${URL}
+		
+		wget ${MIRROR}snapshots/portage-latest.tar.bz2
+		wget ${MIRROR}snapshots/portage-latest.tar.bz2.md5sum
+		clear
 
+		#Create one digests file with only relevant files
+		grep tar.bz2$ stage3-amd64-20100514.tar.bz2.DIGESTS > digests
+		grep portage-latest.tar.bz2$ portage-latest.tar.bz2.md5sum >> digests
+		#Check the digests
+		md5sum -c digests
+		if [ $? -ne 0 ]
+		then
+			echo "Error while downloading files. md5sums did not match" >&2
+			exit 1
+		fi
+		echo "All Checksums correct"
+		rm digests
+
+		echo ""
 		echo "Extracting Stage3"
 		tar xjpf stage3*.tar.bz2 -C $input_path
 		echo "Extracting Portage tree"
 		tar xjpf portage-latest.tar.bz2 -C $input_path/usr/
+
+		echo ""
+		echo ""
 		echo "Remove install Archives"
 		cd ..
-		rm -ri openvz-template-creator-gentooinst-tmp
+		rm -ri ${TMP_DIR}
 
+		echo ""
 		echo "Preparing chroot"
 		cp -L /etc/resolv.conf $input_path/etc/
 		mount -o bind /dev $input_path/dev

@@ -5,16 +5,21 @@
 # gentoo part by: v1tzl1 (http://github.com/v1tzl1/OpenVZ-Template-Creator)
 
 env-update && source /etc/profile
-cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+
+mkdir -p /root/template-doc/
 ln -s /proc/mounts /etc/mtab
 
+ln -s /etc/init.d/net.lo /etc/init.d/net.venet0
 rc-update add net.venet0 default
 rc-update add sshd default
+echo "- Addes net.venet0 and sshd to default runlevel" > /root/template-doc/change.log
 
 mkdir -p /dev/net
 mknod /dev/net/tun c 10 200
 chmod 600 /dev/net/tun
 mknod /dev/fuse c 10 229
+echo "- Created TUN and FUSE devices" >> /root/template-doc/change.log
+
 
 # Network
 echo "hostname" > /etc/hostname
@@ -24,6 +29,9 @@ echo "" > /etc/fstab
 #############################################################################################
 ################################## /etc/conf.d/clock ########################################
 #############################################################################################
+echo "- Selected Europe/Berlin as localtime (/etc/localtime and /etc/conf.d/clock)" >> /root/template-doc/change.log
+cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+
 cat << EOF > /etc/conf.d/clock
 # /etc/conf.d/clock
 
@@ -65,6 +73,8 @@ EOF
 #############################################################################################
 ################################## /etc/rc.conf #############################################
 #############################################################################################
+echo "- Enabling unicode support in /etc/rc.conf" >> /root/template-doc/change.log
+
 cat << EOF > /etc/rc.conf
 # /etc/rc.conf: Global startup script configuration settings
 
@@ -85,6 +95,8 @@ EOF
 #############################################################################################
 ################################## /etc/conf.d/keymaps ######################################
 #############################################################################################
+echo "- Selected de-latin1-nodeadkeys as default keymap in /etc/conf.d/keymaps" >> /root/template-doc/change.log
+
 cat << EOF > /etc/conf.d/keymaps
 # /etc/conf.d/keymaps
 
@@ -109,7 +121,7 @@ EXTENDED_KEYMAPS=""
 # Tell dumpkeys(1) to interpret character action codes to be
 # from the specified character set.
 # This only matters if you set UNICODE="yes" in /etc/rc.conf.
-# For a list of valid sets, run `dumpkeys --help`
+# For a list of valid sets, run 'dumpkeys --help'
 
 DUMPKEYS_CHARSET=""
 EOF
@@ -117,6 +129,8 @@ EOF
 #############################################################################################
 ################################## Locales ##################################################
 #############################################################################################
+echo "- Enabled and generated the following locales: en_US ISO-8859-1, en_US.UTF-8 UTF-8, de_DE ISO-8859-1, de_DE.UTF-8 UTF-8 and de_DE@euro ISO-8859-15 (etc/locale.gen)" >> /root/template-doc/change.log
+
 cat << EOF > /etc/locale.gen
 # /etc/locale.gen: list all of the locales you want to have on your system
 #
@@ -132,7 +146,7 @@ cat << EOF > /etc/locale.gen
 # /usr/share/i18n/SUPPORTED
 #
 # Whenever glibc is emerged, the locales listed here will be automatically
-# rebuilt for you.  After updating this file, you can simply run `locale-gen`
+# rebuilt for you.  After updating this file, you can simply run 'locale-gen'
 # yourself instead of re-emerging glibc.
 
 #en_US ISO-8859-1
@@ -164,9 +178,17 @@ locale-gen
 ################################## Portage auf Vordermann bringen ###########################
 #############################################################################################
 
+clear
+eselect profile list
+echo ""
+echo ""
+echo "Please choose profile number"
+read input_profile
+eselect profile set ${input_profile}
+
 emerge --sync
-emerge -v1 portage
-emerge -v gentoolkit
+emerge -u portage
+emerge -u gentoolkit
 
 # Thats all
 umount /dev
