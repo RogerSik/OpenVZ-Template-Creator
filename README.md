@@ -9,4 +9,6 @@ It is built on a modular base in order to write quick scripts for new version of
 ## Download of already created templates
 <a href="http://files.yoschi.cc/openvz">Here</a> can you download templates that are created with this Creator.
 
+# Powered by
+<a href="http://www.carrot-server.com/"><img src="http://yoschi.cc/wp-content/uploads/carrot-server.png"></a>
 
