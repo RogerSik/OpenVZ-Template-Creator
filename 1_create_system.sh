@@ -27,7 +27,7 @@ rm -rf $input_path/*
 mkdir $input_path
 
 case "$input_distri" in
-     ubuntu|debian)
+     hardy|intrepid|jaunty|karmic|lucid)
 		echo "What is your host distro?"
 		echo "Supported: debian | ubuntu"
 		read input_host_distri
