@@ -18,7 +18,7 @@
 	lucid "Ubuntu 10.04 - Lucid Lync"  \
 	gentoo "Gentoo"  2>/tmp/input_distri.tmp
 
- dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice)" 8 60 2>/tmp/input_path.tmp
+ dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice)" 8 60 "/mnt/dice" 2>/tmp/input_path.tmp
 
 # variable assignation
 input_host=`cat /tmp/input_host.tmp`
