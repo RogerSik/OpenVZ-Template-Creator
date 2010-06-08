@@ -4,8 +4,19 @@
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
 
-echo "Where is the new system? (default /mnt/dice)"
-read input_path
+ dialog --no-cancel --inputbox "Where is the new system? (default /mnt/dice)" 8 50 2>/tmp/input_path.tmp
+ input_path=`cat /tmp/input_path.tmp`
+
+ dialog --no-cancel --menu  "Which distribution want you cleanup?" 12 40 3 \
+	"Debian" "."  \
+	"Ubuntu" "."  \
+	"Gentoo" "." 2>/tmp/input_distri.tmp
+	input_distri=`cat /tmp/input_distri.tmp`
+
+ dialog --no-cancel --inputbox \
+	"Whats the name for that template? (without tar.gz!) \
+	example ubuntu-8.04.3-i386" 8 60 2>/tmp/input_template_name.tmp
+	input_template_name=`cat /tmp/input_template_name.tmp`
 
 umount $input_path/dev
 umount $input_path/proc
@@ -14,10 +25,6 @@ umount $input_path/sys
 # General cleanup
 rm -f $input_path/etc/ssh/ssh_host_*
 rm -f $input_path/etc/ssh/moduli
-
-echo "Which distribution are you installing again?"
-echo "supported: debian ubuntu gentoo"
-read input_distri
 
 case "$input_distri" in
 	debian|ubuntu)
@@ -56,14 +63,10 @@ case "$input_distri" in
 		rm -ri .ssh
 		;; #END gentoo
 	*)
-		echo "Sorry" $input_distri "is not supported"
 		exit 0;
 		;; esac
 
-echo "Whats the name for that template? (without tar.gz!)"
-echo "example ubuntu-8.04.3-i386"
-read input_template_name
 cd $input_path 
 tar --numeric-owner -zcf ~/${input_template_name}.tar.gz .
-echo $input_template_name".tar.gz saved under ~/"
+dialog --msgbox "$input_template_name.tar.gz saved under ~/" 5 42
 
