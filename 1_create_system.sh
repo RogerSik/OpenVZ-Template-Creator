@@ -100,8 +100,6 @@ case "$input_distri" in
 
 		cd ..
 		rm -ri ${TMP_DIR}
-
-		cp -L /etc/resolv.conf $input_path/etc/
 		;; #END gentoo
 
      *)
@@ -109,6 +107,7 @@ case "$input_distri" in
                 ;; esac
 clear
 
+cp -L /etc/resolv.conf $input_path/etc/
 wget -q http://files.yoschi.cc/vpsmem -P $input_path/usr/local/bin
 chmod +x $input_path/usr/local/bin/vpsmem
 
@@ -117,5 +116,6 @@ chmod +x $input_path/usr/local/bin/vpsmem
 mount -t proc none $input_path/proc # because another openssh-server will not configured to the end
 #mount -t sysfs none $input_path/sys
 
+dialog --msgbox "Done. Now you are in your new system chrooted." 5 50
 chroot $input_path
 
