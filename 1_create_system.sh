@@ -3,14 +3,14 @@
 # OpenVZ Template Creator
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
- dialog --title "OpenVZ Template OS Creator" --textbox ./LICENSE 20 80
+ dialog --title "OpenVZ Template Creator" --textbox ./LICENSE 20 80
 
- dialog --menu "What is your host?" 10 30 3  \
+ dialog --no-cancel --menu "What is your host?" 10 30 3  \
 	Debian . \
 	Ubuntu . \
-	"None of both" . 2>input_host.tmp
+	"None of both" . 2>/tmp/input_host.tmp
 
- dialog --menu  "Which distribution want you build?" 15 50 6  \
+ dialog --no-cancel --menu  "Which distribution want you build?" 15 50 6  \
 	hardy "Ubuntu 8.04 - Hardy Heron"  \
 	intrepid "Ubuntu 8.10 - Intrepid Ibex"  \
 	jaunty "Ubuntu 9.04 - Jaunty  Jackalope"  \
@@ -18,7 +18,7 @@
 	lucid "Ubuntu 10.04 - Lucid Lync"  \
 	gentoo "Gentoo"  2>/tmp/input_distri.tmp
 
- dialog --inputbox "Where to create the system? (default /mnt/dice)" 8 60 2>/tmp/input_path.tmp
+ dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice)" 8 60 2>/tmp/input_path.tmp
 
 # variable assignation
 input_host=`cat /tmp/input_host.tmp`
@@ -44,32 +44,30 @@ case "$input_distri" in
 				rm debootstrap.deb
 				;;
 		     *)
-				echo "Host distri not supported yet. Sorry."
+				dialog --msgbox "Host distri not supported yet. Sorry." 5 42
 				exit 0
 				;; esac
 		clear
 
-		echo ""
-		echo "i386 or amd64?"
-		echo ""
-		read input_arch
+		dialog --no-cancel --menu "i386 or amd64?" 15 50 6  \
+		x86 . \
+		amd64 . 2>/tmp/input_arch.tmp
+		input_arch=`cat /tmp/input_arch.tmp`
 
 		debootstrap --variant=minbase --arch $input_arch $input_distri $input_path
                 ;;
      gentoo)
-		echo ""
-		echo "x86 or amd64?"
-		echo ""
-		read input_arch
+		dialog  --no-cancel --menu "x86 or amd64?" 15 50 6  \
+		x86 . \
+		amd64 . 2>/tmp/input_arch.tmp
+		input_arch=`cat /tmp/input_arch.tmp`
+
 		TMP_DIR="openvz-template-creator-gentooinst-tmp"
 		mkdir ${TMP_DIR}
 		cd ${TMP_DIR}
 
 		clear
-		echo ""
-		echo "Please download a stage3 Archive AND the .DIGESTS files as well"
-		echo "(Press Return to start lynx)"
-		read $confirm
+		dialog --msgbox "Please download a stage3 Archive AND the .DIGESTS files as well." 5 70
 		MIRROR="http://ftp.uni-erlangen.de/pub/mirrors/gentoo/"
 		URL=${MIRROR}"releases/"${input_arch}
 		lynx ${URL}
@@ -85,31 +83,26 @@ case "$input_distri" in
 		md5sum -c digests
 		if [ $? -ne 0 ]
 		then
-			echo "Error while downloading files. md5sums did not match" >&2
+			dialog --msgbox "Error while downloading files. md5sums did not match."  5 60
 			exit 1
 		fi
-		echo "All Checksums correct"
+		dialog --msgbox "All Checksums correct."  5 25
 		rm digests
 
-		echo ""
-		echo "Extracting Stage3"
+		dialog --msgbox "Extracting Stage3."  5 22
 		tar xjpf stage3*.tar.bz2 -C $input_path
-		echo "Extracting Portage tree"
+		dialog --msgbox "Extracting Portage tree." 5 28
 		tar xjpf portage-latest.tar.bz2 -C $input_path/usr/
 
-		echo ""
-		echo ""
-		echo "Remove install Archives"
+		dialog --msgbox  "Remove install archives." 5 28
+
 		cd ..
 		rm -ri ${TMP_DIR}
 
-		echo ""
-		echo "Preparing chroot"
 		cp -L /etc/resolv.conf $input_path/etc/
 		;; #END gentoo
 
      *)
-                echo "Distri" $input_distri "not supported yet. Sorry."
                 exit 0
                 ;; esac
 clear
