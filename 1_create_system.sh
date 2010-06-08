@@ -16,7 +16,8 @@
 	jaunty "Ubuntu 9.04 - Jaunty  Jackalope"  \
 	karmic "Ubuntu 9.10 - Karmic Koala"   \
 	lucid "Ubuntu 10.04 - Lucid Lync"  \
-	gentoo "Gentoo"  2>/tmp/input_distri.tmp
+	gentoo "Gentoo"  \
+	lenny "Debian 5.0.4 - Lenny" 2>/tmp/input_distri.tmp
 
  dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice)" 8 60 2>/tmp/input_path.tmp
 
@@ -32,7 +33,7 @@ umount $input_path/sys 2>/dev/null
 
 # clear/create the path
 rm -rf $input_path/* 
-mkdir $input_path
+#mkdir $input_path
 
 case "$input_distri" in
      hardy|intrepid|jaunty|karmic|lucid)
@@ -56,6 +57,27 @@ case "$input_distri" in
 
 		debootstrap --variant=minbase --arch $input_arch $input_distri $input_path
                 ;;
+     lenny)
+     	case "$input_host_distri" in
+     		Ubuntu|Debian)
+     			echo "Download and installation of debootstrap."
+     			aptitude update
+     			aptitude intall debootstrap -y
+     			;;
+     		*)
+				dialog --msgbox "Host distri not supported yet. Sorry." 5 42
+				exit 0
+				;; esac
+				
+		clear
+		
+		dialog --no-cancel --menu "i386 or amd64?" 15 50 6 \
+		i386 . \
+		amd64 . 2>/tmp/input_arch.tmp
+		input_arch=`cat /tmp/input_arch.tmp`
+		
+		debootstrap --arch $input_arch $input_distri $input_path http://ftp2.de.debian.org/debian/
+     			;;
      gentoo)
 		dialog  --no-cancel --menu "x86 or amd64?" 15 50 6  \
 		x86 . \
