@@ -1,71 +1,73 @@
 #!/bin/bash
 #
-# OpenVZ Template OS Creator
+# OpenVZ Template Creator
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
-echo "What distri want you install?"
-echo "Supported:"
-echo "* Ubuntu 8.04 - Hardy Haron (hardy)"
-echo "* Ubuntu 8.10 - Intrepid Ibex (intrepid)"
-echo "* Ubuntu 9.04 - Jaunty  Jackalope (jaunty)"
-echo "* Ubuntu 9.10 - Karmic Koala (karmic)"
-echo "* Ubuntu 10.04 - Lucid Lync (lucid)"
-echo "* Gentoo - current (gentoo)"
-echo " = "
-read input_distri
-echo ""
-echo "Where to create the system? (default /mnt/dice)"
-read input_path
+ dialog --title "OpenVZ Template Creator" --textbox ./LICENSE 20 80
+
+ dialog --no-cancel --menu "What is your host?" 10 30 3  \
+	Debian . \
+	Ubuntu . \
+	"None of both" . 2>/tmp/input_host.tmp
+
+ dialog --no-cancel --menu  "Which distribution want you build?" 15 50 6  \
+	hardy "Ubuntu 8.04 - Hardy Heron"  \
+	intrepid "Ubuntu 8.10 - Intrepid Ibex"  \
+	jaunty "Ubuntu 9.04 - Jaunty  Jackalope"  \
+	karmic "Ubuntu 9.10 - Karmic Koala"   \
+	lucid "Ubuntu 10.04 - Lucid Lync"  \
+	gentoo "Gentoo"  2>/tmp/input_distri.tmp
+
+ dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice)" 8 60 2>/tmp/input_path.tmp
+
+# variable assignation
+input_host=`cat /tmp/input_host.tmp`
+input_distri=`cat /tmp/input_distri.tmp`
+input_path=`cat /tmp/input_path.tmp`
 
 # clean umount
 umount $input_path/dev  2>/dev/null
 umount $input_path/proc 2>/dev/null
 umount $input_path/sys 2>/dev/null
 
-echo "Clear/Create the path"
+# clear/create the path
 rm -rf $input_path/* 
 mkdir $input_path
 
 case "$input_distri" in
-     ubuntu|debian)
-		echo "What is your host distro?"
-		echo "Supported: debian | ubuntu"
-		read input_host_distri
-
+     hardy|intrepid|jaunty|karmic|lucid)
 		case "$input_host_distri" in
-		     ubuntu|debian)
+		     Ubuntu|Debian)
 				echo "Download and installation the latest debootstrap."
 				wget http://files.yoschi.cc/debs/debootstrap.deb
 				dpkg -i debootstrap.deb
 				rm debootstrap.deb
 				;;
 		     *)
-				echo "Distri" $input_host_distri "not supported yet. Sorry."
+				dialog --msgbox "Host distri not supported yet. Sorry." 5 42
 				exit 0
 				;; esac
 		clear
 
-		echo ""
-		echo "i386 or amd64?"
-		echo ""
-		read input_arch
+		dialog --no-cancel --menu "i386 or amd64?" 15 50 6  \
+		x86 . \
+		amd64 . 2>/tmp/input_arch.tmp
+		input_arch=`cat /tmp/input_arch.tmp`
 
 		debootstrap --variant=minbase --arch $input_arch $input_distri $input_path
                 ;;
      gentoo)
-		echo ""
-		echo "x86 or amd64?"
-		echo ""
-		read input_arch
+		dialog  --no-cancel --menu "x86 or amd64?" 15 50 6  \
+		x86 . \
+		amd64 . 2>/tmp/input_arch.tmp
+		input_arch=`cat /tmp/input_arch.tmp`
+
 		TMP_DIR="openvz-template-creator-gentooinst-tmp"
 		mkdir ${TMP_DIR}
 		cd ${TMP_DIR}
 
 		clear
-		echo ""
-		echo "Please download a stage3 Archive AND the .DIGESTS files as well"
-		echo "(Press Return to start lynx)"
-		read $confirm
+		dialog --msgbox "Please download a stage3 Archive AND the .DIGESTS files as well." 5 70
 		MIRROR="http://ftp.uni-erlangen.de/pub/mirrors/gentoo/"
 		URL=${MIRROR}"releases/"${input_arch}
 		lynx ${URL}
@@ -81,31 +83,26 @@ case "$input_distri" in
 		md5sum -c digests
 		if [ $? -ne 0 ]
 		then
-			echo "Error while downloading files. md5sums did not match" >&2
+			dialog --msgbox "Error while downloading files. md5sums did not match."  5 60
 			exit 1
 		fi
-		echo "All Checksums correct"
+		dialog --msgbox "All Checksums correct."  5 25
 		rm digests
 
-		echo ""
-		echo "Extracting Stage3"
+		dialog --msgbox "Extracting Stage3."  5 22
 		tar xjpf stage3*.tar.bz2 -C $input_path
-		echo "Extracting Portage tree"
+		dialog --msgbox "Extracting Portage tree." 5 28
 		tar xjpf portage-latest.tar.bz2 -C $input_path/usr/
 
-		echo ""
-		echo ""
-		echo "Remove install Archives"
+		dialog --msgbox  "Remove install archives." 5 28
+
 		cd ..
 		rm -ri ${TMP_DIR}
 
-		echo ""
-		echo "Preparing chroot"
 		cp -L /etc/resolv.conf $input_path/etc/
 		;; #END gentoo
 
      *)
-                echo "Distri" $input_distri "not supported yet. Sorry."
                 exit 0
                 ;; esac
 clear
@@ -119,3 +116,4 @@ mount -t proc none $input_path/proc # because another openssh-server will not co
 #mount -t sysfs none $input_path/sys
 
 chroot $input_path
+
