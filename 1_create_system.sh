@@ -6,8 +6,8 @@
  dialog --title "OpenVZ Template Creator" --textbox ./LICENSE 20 80
 
  dialog --no-cancel --menu "What is your host?" 10 30 3  \
-	Debian . \
-	Ubuntu . \
+	"Debian" . \
+	"Ubuntu" . \
 	"None of both" . 2>/tmp/input_host.tmp
 
  dialog --no-cancel --menu  "Which distribution want you build?" 15 50 6  \
@@ -32,12 +32,14 @@ umount $input_path/sys 2>/dev/null
 
 # clear/create the path
 rm -rf $input_path/* 
-mkdir $input_path
+if [ ! -d $input_path ]; then
+    mkdir $input_path
+fi 
 
 case "$input_distri" in
      hardy|intrepid|jaunty|karmic|lucid)
-		case "$input_host_distri" in
-		     Ubuntu|Debian)
+		case "$input_host" in
+		     Debian|Ubuntu)
 				echo "Download and installation the latest debootstrap."
 				wget http://files.yoschi.cc/debs/debootstrap.deb
 				dpkg -i debootstrap.deb
