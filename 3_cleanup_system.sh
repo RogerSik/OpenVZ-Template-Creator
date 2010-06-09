@@ -50,18 +50,12 @@ case "$input_distri" in
 	debian|ubuntu)
 		# Each individual VE should have its own pair of SSH host keys. 
 		# The code below will wipe out the existing SSH keys and instruct the newly-created VE to create new SSH keys on first boot.
-		#cat << C_EOF > ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
-		##!/bin/sh
-		#ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -N ''
-		#ssh-keygen -f /etc/ssh/ssh_host_dsa_key -t dsa -N ''
-		#rm /etc/rc2.d/S15ssh_gen_host_keys
-		#C_EOF
-		# looks like bash doesnt like cat << EOF > file input inside a case statement. putting the file line-by-line
-		#cat << C_EOF > ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
-		echo "#!/bin/sh" > ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
-		echo "ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -N ''" >> ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
-		echo "ssh-keygen -f /etc/ssh/ssh_host_dsa_key -t dsa -N ''" >> ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
-		echo "rm /etc/rc2.d/S15ssh_gen_host_keys" >> ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
+cat << EOF > ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
+#!/bin/sh
+ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -N ''
+ssh-keygen -f /etc/ssh/ssh_host_dsa_key -t dsa -N ''
+rm /etc/rc2.d/S15ssh_gen_host_keys
+EOF
 		chmod +x $input_path/etc/rc2.d/S15ssh_gen_host_keys
 
 		cd $input_path/root/
