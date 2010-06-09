@@ -6,37 +6,23 @@
 # Debian Lenny part by: jrocho (http://github.com/jrocho/OpenVZ-Template-Creator)
 # E-Mail: jan.rocho@carrot-server.com
 
-chmod 700 /root
-
-apt-get update
-apt-get install aptitude dialog -y
-
-sed -i -e '/getty/d' /etc/inittab
-
-sed -i -e 's@\([[:space:]]\)\(/var/log/\)@\1-\2@' /etc/*syslog.conf
-
-rm -f /etc/mtab
-ln -s /proc/mounts /etc/mtab
-
-cat << EOF > /etc/resolv.conf
-nameserver 213.133.98.98
-nameserver 213.133.99.99
-nameserver 213.133.100.100
-
-EOF
-
 cat << EOF > /etc/apt/sources.list
 deb http://ftp.de.debian.org/debian/ lenny main contrib non-free
 deb-src http://ftp.de.debian.org/debian/ lenny main contrib non-free
 deb http://security.debian.org/ lenny/updates main contrib non-free
 deb http://volatile.debian.org/debian-volatile lenny/volatile main non-free
-
 EOF
 
 aptitude update
 aptitude dist-upgrade -y
 aptitude install ssh bzip2 vim bc lsof nano quota rsync wget less locales -y
 aptitude clean
+
+# Disable running gettys on terminals as a VE does not have any
+sed -i -e '/getty/d' /etc/inittab
+
+# Turn off doing sync() on every write for syslog's log files, to improve I/O performance:
+sed -i -e 's@\([[:space:]]\)\(/var/log/\)@\1-\2@' /etc/*syslog.conf
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
 rm -f /etc/mtab
