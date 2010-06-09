@@ -4,8 +4,8 @@
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
 
- dialog --no-cancel --inputbox "Where is the new system? (default /mnt/dice)" 8 50 2>/tmp/input_path.tmp
- input_path=`cat /tmp/input_path.tmp`
+ dialog --no-cancel --inputbox "Where is the new system? (default /mnt/dice)" 8 50 "/mnt/dice/" 2>/tmp/input_path.tmp
+ 	input_path=`cat /tmp/input_path.tmp`
 
  dialog --no-cancel --menu  "Which distribution want you cleanup?" 10 40 3 \
 	"Debian" "."  \
@@ -44,7 +44,7 @@ case "$input_nameserver" in
 		;;
 	Nothing)
 		rm -f $input_path/etc/resolv.conf
-		;; esac
+		;;
 
 case "$input_distri" in
 	debian|ubuntu)
@@ -87,6 +87,5 @@ case "$input_distri" in
 		;; esac
 
 cd $input_path 
-tar --numeric-owner -zcf ~/${input_template_name}.tar.gz .
-dialog --msgbox "$input_template_name.tar.gz saved under ~/" 5 42
-
+tar --numeric-owner -zcf ~/${input_template_name}.tar.gz . 2>/dev/null
+ dialog --no-cancel --msgbox "$input_template_name.tar.gz saved under ~/" 5 42
