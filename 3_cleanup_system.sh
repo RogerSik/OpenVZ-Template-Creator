@@ -7,11 +7,17 @@
  dialog --no-cancel --inputbox "Where is the new system? (default /mnt/dice)" 8 50 2>/tmp/input_path.tmp
  input_path=`cat /tmp/input_path.tmp`
 
- dialog --no-cancel --menu  "Which distribution want you cleanup?" 12 40 3 \
+ dialog --no-cancel --menu  "Which distribution want you cleanup?" 10 40 3 \
 	"Debian" "."  \
 	"Ubuntu" "."  \
 	"Gentoo" "." 2>/tmp/input_distri.tmp
 	input_distri=`cat /tmp/input_distri.tmp`
+
+ dialog --no-cancel --menu  "Which nameserver want you use for your template?" 10 55 3 \
+	"locale" "Use the resolv.conf from the host."  \
+	"Google" "Use the public DNS Server from Google."  \
+	"Nothing" "Dont use a nameserver." 2>/tmp/input_nameserver.tmp
+	input_nameserver=`cat /tmp/input_nameserver.tmp`
 
  dialog --no-cancel --inputbox \
 	"Whats the name for that template? (without tar.gz!) \
@@ -25,6 +31,20 @@ umount $input_path/sys
 # General cleanup
 rm -f $input_path/etc/ssh/ssh_host_*
 rm -f $input_path/etc/ssh/moduli
+
+case "$input_nameserver" in
+	locale)
+		cp -L /etc/resolv.conf $input_path/etc/
+		;;
+	Google)
+		cat << EOF > $input_path/etc/resolv.conf
+		nameserver 8.8.8.8
+		nameserver 8.8.4.4 
+		EOF
+		;;
+	Nothing)
+		exit 0;
+		;; esac
 
 case "$input_distri" in
 	debian|ubuntu)
@@ -42,8 +62,8 @@ case "$input_distri" in
 		echo "ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -N ''" >> ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
 		echo "ssh-keygen -f /etc/ssh/ssh_host_dsa_key -t dsa -N ''" >> ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
 		echo "rm /etc/rc2.d/S15ssh_gen_host_keys" >> ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
-
 		chmod +x $input_path/etc/rc2.d/S15ssh_gen_host_keys
+
 		cd $input_path/root/
 		> .bash_history; > .viminfo
 		cd $input_path/var/log
