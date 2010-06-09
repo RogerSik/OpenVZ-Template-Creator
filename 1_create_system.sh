@@ -6,8 +6,8 @@
  dialog --title "OpenVZ Template Creator" --textbox ./LICENSE 20 80
 
  dialog --no-cancel --menu "What is your host?" 10 30 3  \
-	Debian . \
-	Ubuntu . \
+	"Debian" . \
+	"Ubuntu" . \
 	"None of both" . 2>/tmp/input_host.tmp
 
  dialog --no-cancel --menu  "Which distribution want you build?" 15 50 6  \
@@ -18,7 +18,7 @@
 	lucid "Ubuntu 10.04 - Lucid Lync"  \
 	gentoo "Gentoo"  2>/tmp/input_distri.tmp
 
- dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice)" 8 60 2>/tmp/input_path.tmp
+ dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice)" 8 60 "/mnt/dice" 2>/tmp/input_path.tmp
 
 # variable assignation
 input_host=`cat /tmp/input_host.tmp`
@@ -32,12 +32,14 @@ umount $input_path/sys 2>/dev/null
 
 # clear/create the path
 rm -rf $input_path/* 
-mkdir $input_path
+if [ ! -d $input_path ]; then
+    mkdir $input_path
+fi 
 
 case "$input_distri" in
      hardy|intrepid|jaunty|karmic|lucid)
-		case "$input_host_distri" in
-		     Ubuntu|Debian)
+		case "$input_host" in
+		     Debian|Ubuntu)
 				echo "Download and installation the latest debootstrap."
 				wget http://files.yoschi.cc/debs/debootstrap.deb
 				dpkg -i debootstrap.deb
@@ -98,8 +100,6 @@ case "$input_distri" in
 
 		cd ..
 		rm -ri ${TMP_DIR}
-
-		cp -L /etc/resolv.conf $input_path/etc/
 		;; #END gentoo
 
      *)
@@ -107,6 +107,7 @@ case "$input_distri" in
                 ;; esac
 clear
 
+cp -L /etc/resolv.conf $input_path/etc/
 wget -q http://files.yoschi.cc/vpsmem -P $input_path/usr/local/bin
 chmod +x $input_path/usr/local/bin/vpsmem
 
@@ -115,5 +116,5 @@ chmod +x $input_path/usr/local/bin/vpsmem
 mount -t proc none $input_path/proc # because another openssh-server will not configured to the end
 #mount -t sysfs none $input_path/sys
 
+dialog --msgbox "Done. Now you are in your new system chrooted." 5 50
 chroot $input_path
-
