@@ -5,6 +5,7 @@ It is built on a modular base in order to write quick scripts for new version of
 <ul>
   <li>chroot</li>
   <li>dialog</li>
+  <li>lynx</li>
 </ul>
 
 ## Control:

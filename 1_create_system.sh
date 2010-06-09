@@ -64,7 +64,7 @@ case "$input_distri" in
 		amd64 . 2>/tmp/input_arch.tmp
 		input_arch=`cat /tmp/input_arch.tmp`
 
-		TMP_DIR="openvz-template-creator-gentooinst-tmp"
+		TMP_DIR="/tmp/openvz-tc-gentoo"
 		mkdir ${TMP_DIR}
 		cd ${TMP_DIR}
 
@@ -88,8 +88,8 @@ case "$input_distri" in
 			dialog --msgbox "Error while downloading files. md5sums did not match."  5 60
 			exit 1
 		fi
-		dialog --msgbox "All Checksums correct."  5 25
-		rm digests
+		dialog --msgbox "All Checksums correct."  5 26
+		rm -f digests
 
 		dialog --msgbox "Extracting Stage3."  5 22
 		tar xjpf stage3*.tar.bz2 -C $input_path
@@ -99,7 +99,7 @@ case "$input_distri" in
 		dialog --msgbox  "Remove install archives." 5 28
 
 		cd ..
-		rm -ri ${TMP_DIR}
+		rm -rf ${TMP_DIR}
 		;; #END gentoo
 
      *)
