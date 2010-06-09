@@ -9,26 +9,23 @@
 	"Debian" . \
 	"Ubuntu" . \
 	"None of both" . 2>/tmp/input_host.tmp
+	input_host=`cat /tmp/input_host.tmp`
 
- dialog --no-cancel --menu  "Which distribution want you build?" 15 50 6  \
+ dialog --no-cancel --menu  "Which distribution want you build?" 15 50 7 \
 	hardy "Ubuntu 8.04 - Hardy Heron"  \
 	intrepid "Ubuntu 8.10 - Intrepid Ibex"  \
 	jaunty "Ubuntu 9.04 - Jaunty  Jackalope"  \
 	karmic "Ubuntu 9.10 - Karmic Koala"   \
 	lucid "Ubuntu 10.04 - Lucid Lync"  \
 	gentoo "Gentoo"  \
-	lenny "Debian 5.0.4 - Lenny" 2>/tmp/input_distri.tmp
+	lenny "Debian 5 - Lenny" 2>/tmp/input_distri.tmp
+	input_distri=`cat /tmp/input_distri.tmp`
 
- dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice)" 8 60 "/mnt/dice" 2>/tmp/input_path.tmp
-
-
-# variable assignation
-input_host=`cat /tmp/input_host.tmp`
-input_distri=`cat /tmp/input_distri.tmp`
-input_path=`cat /tmp/input_path.tmp`
+ dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice/)" 8 60 "/mnt/dice/" 2>/tmp/input_path.tmp
+	input_path=`cat /tmp/input_path.tmp`
 
 # clean umount
-umount $input_path/dev  2>/dev/null
+umount $input_path/dev 2>/dev/null
 umount $input_path/proc 2>/dev/null
 umount $input_path/sys 2>/dev/null
 
@@ -42,7 +39,6 @@ case "$input_distri" in
      hardy|intrepid|jaunty|karmic|lucid|lenny)
 		case "$input_host" in
 		     Debian|Ubuntu)
-
 				echo "Download and installation the latest debootstrap."
 				wget http://files.yoschi.cc/debs/debootstrap.deb
 				dpkg -i debootstrap.deb
@@ -55,7 +51,7 @@ case "$input_distri" in
 		clear
 
 		dialog --no-cancel --menu "i386 or amd64?" 15 50 6  \
-		x86 . \
+		i386 . \
 		amd64 . 2>/tmp/input_arch.tmp
 		input_arch=`cat /tmp/input_arch.tmp`
 
@@ -104,10 +100,6 @@ case "$input_distri" in
 
 		cd ..
 		rm -ri ${TMP_DIR}
-
-
-		cp -L /etc/resolv.conf $input_path/etc/
-
 		;; #END gentoo
 
      *)
@@ -115,7 +107,7 @@ case "$input_distri" in
                 ;; esac
 clear
 
-cp -L /etc/resolv.conf $input_path/etc/
+cp -R /etc/resolv.conf $input_path/etc/
 wget -q http://files.yoschi.cc/vpsmem -P $input_path/usr/local/bin
 chmod +x $input_path/usr/local/bin/vpsmem
 

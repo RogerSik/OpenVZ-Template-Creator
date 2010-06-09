@@ -43,7 +43,7 @@ case "$input_nameserver" in
 		EOF
 		;;
 	Nothing)
-		exit 0;
+		rm -f $input_path/etc/resolv.conf
 		;; esac
 
 case "$input_distri" in

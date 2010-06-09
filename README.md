@@ -3,6 +3,7 @@ It is built on a modular base in order to write quick scripts for new version of
 
 ## Requirements
 <ul>
+  <li>chroot</li>
   <li>dialog</li>
 </ul>
 
