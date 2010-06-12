@@ -24,6 +24,12 @@
  dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice/)" 8 60 "/mnt/dice/" 2>/tmp/input_path.tmp
 	input_path=`cat /tmp/input_path.tmp`
 
+ dialog --no-cancel --menu  "Which nameserver want you use for your template?" 10 55 3 \
+	"locale" "Use the resolv.conf from the host."  \
+	"Google" "Use the public DNS Server from Google."  \
+	"Nothing" "Dont use a nameserver." 2>/tmp/input_nameserver.tmp
+	input_nameserver=`cat /tmp/input_nameserver.tmp`
+
 # clean umount
 umount $input_path/dev 2>/dev/null
 umount $input_path/proc 2>/dev/null
@@ -40,7 +46,7 @@ case "$input_distri" in
 		case "$input_host" in
 		     Debian|Ubuntu)
 				echo "Download and installation the latest debootstrap."
-				wget http://files.yoschi.cc/debs/debootstrap.deb
+				wget http://packages.ubuntu.com/lucid/all/debootstrap/download
 				dpkg -i debootstrap.deb
 				rm debootstrap.deb
 				;;
@@ -105,6 +111,20 @@ case "$input_distri" in
      *)
                 exit 0
                 ;; esac
+
+case "$input_nameserver" in
+	locale)
+		cp -L /etc/resolv.conf $input_path/etc/
+		;;
+	Google)
+		cat << EOF > $input_path/etc/resolv.conf
+		nameserver 8.8.8.8
+		nameserver 8.8.4.4 
+		EOF
+		;;
+	Nothing)
+		rm -f $input_path/etc/resolv.conf
+		;;
 clear
 
 cp -R /etc/resolv.conf $input_path/etc/

@@ -13,12 +13,6 @@
 	"Gentoo" "." 2>/tmp/input_distri.tmp
 	input_distri=`cat /tmp/input_distri.tmp`
 
- dialog --no-cancel --menu  "Which nameserver want you use for your template?" 10 55 3 \
-	"locale" "Use the resolv.conf from the host."  \
-	"Google" "Use the public DNS Server from Google."  \
-	"Nothing" "Dont use a nameserver." 2>/tmp/input_nameserver.tmp
-	input_nameserver=`cat /tmp/input_nameserver.tmp`
-
  dialog --no-cancel --inputbox \
 	"Whats the name for that template? (without tar.gz!) \
 	example ubuntu-8.04.3-i386" 8 60 2>/tmp/input_template_name.tmp
@@ -31,20 +25,6 @@ umount $input_path/sys
 # General cleanup
 rm -f $input_path/etc/ssh/ssh_host_*
 rm -f $input_path/etc/ssh/moduli
-
-case "$input_nameserver" in
-	locale)
-		cp -L /etc/resolv.conf $input_path/etc/
-		;;
-	Google)
-		cat << EOF > $input_path/etc/resolv.conf
-		nameserver 8.8.8.8
-		nameserver 8.8.4.4 
-		EOF
-		;;
-	Nothing)
-		rm -f $input_path/etc/resolv.conf
-		;;
 
 case "$input_distri" in
 	debian|ubuntu)
