@@ -46,8 +46,8 @@ case "$input_distri" in
 		case "$input_host" in
 		     Debian|Ubuntu)
 				echo "Download and installation the latest debootstrap."
-				wget http://packages.ubuntu.com/lucid/all/debootstrap/download
-				dpkg -i debootstrap.deb
+				wget http://de.archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/debootstrap_1.0.20ubuntu1_all.deb
+				dpkg -i debootstrap_1.0.20ubuntu1_all.deb
 				rm debootstrap.deb
 				;;
 		     *)
