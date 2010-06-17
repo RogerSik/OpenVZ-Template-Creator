@@ -66,14 +66,8 @@ update-rc.d -f inetd remove
 # set the default timezone
 echo "Europe/Vienna" > /etc/timezone
 
-# get config files
-rm /etc/nanorc
-wget -q http://zak.rocho.org/carrot/nanorc -P /etc
-rm /etc/vim/vimrc
-wget -q http://zak.rocho.org/carrot/vimrc -P /etc/vim
-
 # automatically create the right /lib/modules for the current kernel
-wget -q http://zak.rocho.org/carrot/iptables -P /etc/init.d
+wget -q http://files.openvz-tc.org/scripts/iptables -P /etc/init.d
 chmod 755 /etc/init.d/iptables
 update-rc.d iptables start 99 2 3 4 5 . stop 00 0 1 6 .
 

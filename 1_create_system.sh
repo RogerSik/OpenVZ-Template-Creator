@@ -128,7 +128,7 @@ case "$input_nameserver" in
 clear
 
 cp -R /etc/resolv.conf $input_path/etc/
-wget -q http://files.yoschi.cc/vpsmem -P $input_path/usr/local/bin
+wget -q http://files.openvz-tc.org/scripts/vpsmem -P $input_path/usr/local/bin
 chmod +x $input_path/usr/local/bin/vpsmem
 
 #if dev is mounted the mknod commands in the install scripts will create the devices on the host machine and not inside the template
