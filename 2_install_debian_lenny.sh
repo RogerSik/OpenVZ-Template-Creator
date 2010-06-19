@@ -13,10 +13,11 @@ deb http://security.debian.org/ lenny/updates main contrib non-free
 deb http://volatile.debian.org/debian-volatile lenny/volatile main non-free
 EOF
 
-aptitude update
-aptitude dist-upgrade -y
-aptitude install ssh bzip2 vim bc lsof nano quota rsync wget less locales -y
-aptitude clean
+apt-get update
+apt-get dist-upgrade -y
+apt-get install aptitude bash-completion bzip2 bc inetutils-ping less locales logrotate lsof man nano quota rsync ssh sshfs vim wget whiptail -y
+apt-get clean
+apt-get autoremove
 
 # Disable running gettys on terminals as a VE does not have any
 sed -i -e '/getty/d' /etc/inittab
@@ -36,19 +37,20 @@ mknod -m 0660 /dev/fuse c 10 229
 chown root:ssh /dev/fuse
 
 # SSH Setup
-rm /etc/ssh/moduli
-echo "# Default settings for openssh-server. This file is sourced by /bin/sh from" > /etc/default/ssh
-echo "# /etc/init.d/ssh." >> /etc/default/ssh
-echo >> /etc/default/ssh
-echo "# Options to pass to sshd" >> /etc/default/ssh
-echo "SSHD_OPTS=" >> /etc/default/ssh
-echo >> /etc/default/ssh
-echo "# OOM-killer adjustment for sshd (see" >> /etc/default/ssh
-echo "# linux/Documentation/filesystems/proc.txt; lower values reduce likelihood" >> /etc/default/ssh
-echo "# of being killed, while -17 means the OOM-killer will ignore sshd; set to" >> /etc/default/ssh
-echo "# the empty string to skip adjustment)" >> /etc/default/ssh
-echo "#SSHD_OOM_ADJUST=-17" >> /etc/default/ssh
-echo "unset SSHD_OOM_ADJUST" >> /etc/default/ssh
+cat << EOF > /etc/default/ssh
+# Default settings for openssh-server. This file is sourced by /bin/sh from
+# /etc/init.d/ssh.
+
+# Options to pass to sshd
+SSHD_OPTS=
+
+# OOM-killer adjustment for sshd (see
+# linux/Documentation/filesystems/proc.txt; lower values reduce likelihood
+# of being killed, while -17 means the OOM-killer will ignore sshd; set to
+# the empty string to skip adjustment)
+#SSHD_OOM_ADJUST=-17
+unset SSHD_OOM_ADJUST
+EOF
 
 # Network
 echo "hostname" > /etc/hostname
@@ -70,11 +72,6 @@ echo "Europe/Vienna" > /etc/timezone
 wget -q http://files.openvz-tc.org/scripts/iptables -P /etc/init.d
 chmod 755 /etc/init.d/iptables
 update-rc.d iptables start 99 2 3 4 5 . stop 00 0 1 6 .
-
-# configure the locales
-wget -q http://zak.rocho.org/carrot/locale.gen -P /etc
-chmod 644 /etc/locale.gen
-/usr/sbin/locale-gen
 
 #umount /dev
 umount /proc

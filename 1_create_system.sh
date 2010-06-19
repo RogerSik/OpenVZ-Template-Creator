@@ -46,15 +46,15 @@ case "$input_distri" in
 		case "$input_host" in
 		     Debian|Ubuntu)
 				echo "Download and installation the latest debootstrap."
-				wget http://de.archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/debootstrap_1.0.20ubuntu1_all.deb
-				dpkg -i debootstrap_1.0.20ubuntu1_all.deb
-				rm debootstrap.deb
+				debootstrap_deb=debootstrap_1.0.20ubuntu1_all.deb
+				wget http://de.archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/$debootstrap_deb
+				dpkg -i $debootstrap_deb
+				rm $debootstrap_deb
 				;;
 		     *)
 				dialog --msgbox "Host distri not supported yet. Sorry." 5 42
 				exit 0
 				;; esac
-		clear
 
 		dialog --no-cancel --menu "i386 or amd64?" 15 50 6  \
 		i386 . \
@@ -74,7 +74,6 @@ case "$input_distri" in
 		mkdir ${TMP_DIR}
 		cd ${TMP_DIR}
 
-		clear
 		dialog --msgbox "Please download a stage3 Archive AND the .DIGESTS files as well." 5 70
 		MIRROR="http://ftp.uni-erlangen.de/pub/mirrors/gentoo/"
 		URL=${MIRROR}"releases/"${input_arch}
@@ -82,7 +81,6 @@ case "$input_distri" in
 
 		wget ${MIRROR}snapshots/portage-latest.tar.bz2
 		wget ${MIRROR}snapshots/portage-latest.tar.bz2.md5sum
-		clear
 
 		#Create one digests file with only relevant files
 		grep tar.bz2$ stage3-amd64-20100514.tar.bz2.DIGESTS > digests
@@ -117,17 +115,15 @@ case "$input_nameserver" in
 		cp -L /etc/resolv.conf $input_path/etc/
 		;;
 	Google)
-		cat << EOF > $input_path/etc/resolv.conf
-		nameserver 8.8.8.8
-		nameserver 8.8.4.4 
-		EOF
+cat << EOF > $input_path/etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4 
+EOF
 		;;
 	Nothing)
 		rm -f $input_path/etc/resolv.conf
-		;;
-clear
+		;; esac
 
-cp -R /etc/resolv.conf $input_path/etc/
 wget -q http://files.openvz-tc.org/scripts/vpsmem -P $input_path/usr/local/bin
 chmod +x $input_path/usr/local/bin/vpsmem
 
