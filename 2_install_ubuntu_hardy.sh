@@ -28,11 +28,8 @@ deb-src http://de.archive.ubuntu.com/ubuntu hardy-security main #restricted univ
 #deb-src http://de.archive.ubuntu.com/ubuntu hardy-backports main #restricted universe multiverse
 EOF
 
-cat << EOF > /etc/fstab
-proc  /proc       proc    defaults    0    0
-none  /dev/pts    devpts  rw          0    0
-EOF
-
+apt-get update
+apt-get install aptitude
 aptitude update
 aptitude dist-upgrade -y
 aptitude install anacron bc language-pack-en language-pack-de bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y --without-recommends

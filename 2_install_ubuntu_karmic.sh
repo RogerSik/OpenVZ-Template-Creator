@@ -53,11 +53,6 @@ deb-src http://de.archive.ubuntu.com/ubuntu karmic-security main #restricted uni
 #deb-src http://de.archive.ubuntu.com/ubuntu karmic-backports main #restricted universe multiverse
 EOF
 
-cat << EOF > /etc/fstab
-proc  /proc       proc    defaults    0    0
-none  /dev/pts    devpts  rw          0    0
-EOF
-
 apt-get update
 apt-get dist-upgrade -y
 apt-get install anacron aptitude bc language-pack-en language-pack-de bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y

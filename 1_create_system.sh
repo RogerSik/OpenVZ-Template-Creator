@@ -61,10 +61,9 @@ case "$input_distri" in
 		case "$input_host" in
 		     Debian|Ubuntu)
 				echo "Download and installation the latest debootstrap."
-				debootstrap_deb=debootstrap_1.0.20ubuntu1_all.deb
-				wget http://de.archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/$debootstrap_deb
-				dpkg -i $debootstrap_deb
-				rm $debootstrap_deb
+				wget http://files.openvz-tc.org/debs/debootstrap.deb
+				dpkg -i debootstrap.deb
+				rm debootstrap.deb
 				;;
 		     *)
 				dialog --msgbox "Host distri not supported yet. Sorry." 5 42

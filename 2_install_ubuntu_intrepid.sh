@@ -10,11 +10,6 @@ apt-get remove --purge -y ubuntu-minimal wpasupplicant wireless-tools \
   console-terminus busybox-initramfs libvolume-id0 \
   ntpdate eject pciutils tasksel tasksel-data laptop-detect
 
-cat << EOF > /etc/resolv.conf
-nameserver 8.8.8.8
-nameserver 8.8.4.4 
-EOF
-
 rm /etc/event.d/tty*
 rm -fr /lib/udev
 
@@ -30,11 +25,6 @@ deb-src http://de.archive.ubuntu.com/ubuntu intrepid-security main #restricted u
  
 #deb http://de.archive.ubuntu.com/ubuntu intrepid-backports main #restricted universe multiverse
 #deb-src http://de.archive.ubuntu.com/ubuntu intrepid-backports main #restricted universe multiverse
-EOF
-
-cat << EOF > /etc/fstab
-proc  /proc       proc    defaults    0    0
-none  /dev/pts    devpts  rw          0    0
 EOF
 
 apt-get update
