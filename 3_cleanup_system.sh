@@ -3,7 +3,7 @@
 # OpenVZ Template OS Creator
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
-if[ -f /tmp/input_path.tmp ]; then
+if [ -f /tmp/input_path.tmp ]; then
 	input_path_default=`cat /tmp/input_path.tmp`
 else
 	input_path_default="/mnt/dice/"
@@ -65,11 +65,8 @@ EOF
 		if [ $? -eq 0 ]; then
 			rm -rf "$input_path/root/.ssh/*"
 		fi
-		;; #END gentoo
-	*)
-		exit 0;
-		;; esac
+		;; esac #END gentoo
 
-cd $input_path
+cd $input_path_default
 tar --numeric-owner -zcf ~/${input_template_name}.tar.gz . 2>/dev/null
-dialog --no-cancel --msgbox "$input_template_name.tar.gz saved under ~/" 5 42
+dialog --no-cancel --msgbox "$input_template_name.tar.gz \ saved under ~/" 5 42
