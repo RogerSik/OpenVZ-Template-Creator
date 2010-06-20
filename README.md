@@ -5,8 +5,12 @@ It is built on a modular base in order to write quick scripts for new version of
 <ul>
   <li>chroot</li>
   <li>dialog</li>
-  <li>lynx</li>
   <li>md5sum</li>
+  <li>wget</li>
+</ul>
+optional
+<ul>
+  <li>links or lynx</li>
 </ul>
 
 ## Control:
