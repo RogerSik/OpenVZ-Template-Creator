@@ -3,7 +3,10 @@ It is built on a modular base in order to write quick scripts for new version of
 
 ## Requirements
 <ul>
+  <li>chroot</li>
   <li>dialog</li>
+  <li>lynx</li>
+  <li>md5sum</li>
 </ul>
 
 ## Control:
@@ -12,7 +15,7 @@ It is built on a modular base in order to write quick scripts for new version of
 3. As a last step execute the 3_cleanup_system.sh to clean up (clear logs, etc.)
 
 ## Download of already created templates
-<a href="http://files.yoschi.cc/openvz">Here</a> can you download templates that are created with this Creator.
+<a href="http://files.openvz-tc.org/templates">Here</a> can you download templates that are created with this Creator.
 
 # Powered by
 <a href="http://www.carrot-server.com/"><img src="http://yoschi.cc/wp-content/uploads/carrot-server.png"></a>

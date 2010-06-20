@@ -9,24 +9,29 @@
 	"Debian" . \
 	"Ubuntu" . \
 	"None of both" . 2>/tmp/input_host.tmp
+	input_host=`cat /tmp/input_host.tmp`
 
- dialog --no-cancel --menu  "Which distribution want you build?" 15 50 6  \
+ dialog --no-cancel --menu  "Which distribution want you build?" 15 50 7 \
 	hardy "Ubuntu 8.04 - Hardy Heron"  \
 	intrepid "Ubuntu 8.10 - Intrepid Ibex"  \
 	jaunty "Ubuntu 9.04 - Jaunty  Jackalope"  \
 	karmic "Ubuntu 9.10 - Karmic Koala"   \
 	lucid "Ubuntu 10.04 - Lucid Lync"  \
-	gentoo "Gentoo"  2>/tmp/input_distri.tmp
+	gentoo "Gentoo"  \
+	lenny "Debian 5 - Lenny" 2>/tmp/input_distri.tmp
+	input_distri=`cat /tmp/input_distri.tmp`
 
- dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice)" 8 60 "/mnt/dice" 2>/tmp/input_path.tmp
+ dialog --no-cancel --inputbox "Where to create the system? (default /mnt/dice/)" 8 60 "/mnt/dice/" 2>/tmp/input_path.tmp
+	input_path=`cat /tmp/input_path.tmp`
 
-# variable assignation
-input_host=`cat /tmp/input_host.tmp`
-input_distri=`cat /tmp/input_distri.tmp`
-input_path=`cat /tmp/input_path.tmp`
+ dialog --no-cancel --menu  "Which nameserver want you use for your template?" 10 55 3 \
+	"locale" "Use the resolv.conf from the host."  \
+	"Google" "Use the public DNS Server from Google."  \
+	"Nothing" "Dont use a nameserver." 2>/tmp/input_nameserver.tmp
+	input_nameserver=`cat /tmp/input_nameserver.tmp`
 
 # clean umount
-umount $input_path/dev  2>/dev/null
+umount $input_path/dev 2>/dev/null
 umount $input_path/proc 2>/dev/null
 umount $input_path/sys 2>/dev/null
 
@@ -37,38 +42,38 @@ if [ ! -d $input_path ]; then
 fi 
 
 case "$input_distri" in
-     hardy|intrepid|jaunty|karmic|lucid)
+     hardy|intrepid|jaunty|karmic|lucid|lenny)
 		case "$input_host" in
 		     Debian|Ubuntu)
 				echo "Download and installation the latest debootstrap."
-				wget http://files.yoschi.cc/debs/debootstrap.deb
-				dpkg -i debootstrap.deb
-				rm debootstrap.deb
+				debootstrap_deb=debootstrap_1.0.20ubuntu1_all.deb
+				wget http://de.archive.ubuntu.com/ubuntu/pool/main/d/debootstrap/$debootstrap_deb
+				dpkg -i $debootstrap_deb
+				rm $debootstrap_deb
 				;;
 		     *)
 				dialog --msgbox "Host distri not supported yet. Sorry." 5 42
 				exit 0
 				;; esac
-		clear
 
 		dialog --no-cancel --menu "i386 or amd64?" 15 50 6  \
-		x86 . \
+		i386 . \
 		amd64 . 2>/tmp/input_arch.tmp
 		input_arch=`cat /tmp/input_arch.tmp`
 
 		debootstrap --variant=minbase --arch $input_arch $input_distri $input_path
                 ;;
+                
      gentoo)
 		dialog  --no-cancel --menu "x86 or amd64?" 15 50 6  \
 		x86 . \
 		amd64 . 2>/tmp/input_arch.tmp
 		input_arch=`cat /tmp/input_arch.tmp`
 
-		TMP_DIR="openvz-template-creator-gentooinst-tmp"
+		TMP_DIR="/tmp/openvz-tc-gentoo"
 		mkdir ${TMP_DIR}
 		cd ${TMP_DIR}
 
-		clear
 		dialog --msgbox "Please download a stage3 Archive AND the .DIGESTS files as well." 5 70
 		MIRROR="http://ftp.uni-erlangen.de/pub/mirrors/gentoo/"
 		URL=${MIRROR}"releases/"${input_arch}
@@ -76,7 +81,6 @@ case "$input_distri" in
 
 		wget ${MIRROR}snapshots/portage-latest.tar.bz2
 		wget ${MIRROR}snapshots/portage-latest.tar.bz2.md5sum
-		clear
 
 		#Create one digests file with only relevant files
 		grep tar.bz2$ stage3-amd64-20100514.tar.bz2.DIGESTS > digests
@@ -88,8 +92,8 @@ case "$input_distri" in
 			dialog --msgbox "Error while downloading files. md5sums did not match."  5 60
 			exit 1
 		fi
-		dialog --msgbox "All Checksums correct."  5 25
-		rm digests
+		dialog --msgbox "All Checksums correct."  5 26
+		rm -f digests
 
 		dialog --msgbox "Extracting Stage3."  5 22
 		tar xjpf stage3*.tar.bz2 -C $input_path
@@ -99,16 +103,28 @@ case "$input_distri" in
 		dialog --msgbox  "Remove install archives." 5 28
 
 		cd ..
-		rm -ri ${TMP_DIR}
+		rm -rf ${TMP_DIR}
 		;; #END gentoo
 
      *)
                 exit 0
                 ;; esac
-clear
 
-cp -L /etc/resolv.conf $input_path/etc/
-wget -q http://files.yoschi.cc/vpsmem -P $input_path/usr/local/bin
+case "$input_nameserver" in
+	locale)
+		cp -L /etc/resolv.conf $input_path/etc/
+		;;
+	Google)
+cat << EOF > $input_path/etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4 
+EOF
+		;;
+	Nothing)
+		rm -f $input_path/etc/resolv.conf
+		;; esac
+
+wget -q http://files.openvz-tc.org/scripts/vpsmem -P $input_path/usr/local/bin
 chmod +x $input_path/usr/local/bin/vpsmem
 
 #if dev is mounted the mknod commands in the install scripts will create the devices on the host machine and not inside the template
