@@ -3,24 +3,29 @@
 # OpenVZ Template OS Creator
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
+if[ -f /tmp/input_path.tmp ]; then
+	input_path_default=`cat /tmp/input_path.tmp`
+else
+	input_path_default="/mnt/dice/"
+fi
+dialog --no-cancel --inputbox "Where is the new system? (default /mnt/dice)" 8 50 "$input_path_default" 2>/tmp/input_path.tmp
+	input_path=`cat /tmp/input_path.tmp`
 
- dialog --no-cancel --inputbox "Where is the new system? (default /mnt/dice)" 8 50 "/mnt/dice/" 2>/tmp/input_path.tmp
- 	input_path=`cat /tmp/input_path.tmp`
-
- dialog --no-cancel --menu  "Which distribution want you cleanup?" 10 40 3 \
+dialog --no-cancel --menu  "Which distribution want you cleanup?" 10 40 3 \
 	"Debian" "."  \
 	"Ubuntu" "."  \
 	"Gentoo" "." 2>/tmp/input_distri.tmp
 	input_distri=`cat /tmp/input_distri.tmp`
 
- dialog --no-cancel --inputbox \
+dialog --no-cancel --inputbox \
 	"Whats the name for that template? (without tar.gz!) \
 	example ubuntu-8.04.3-i386" 8 60 2>/tmp/input_template_name.tmp
 	input_template_name=`cat /tmp/input_template_name.tmp`
 
-umount $input_path/dev
-umount $input_path/proc
-umount $input_path/sys
+umount $input_path/dev >/dev/null 2>&1
+umount $input_path/proc >/dev/null 2>&1
+umount $input_path/sys >/dev/null 2>&1
+umount $input_path/tmp/openvz-tc.org >/dev/null 2>&1
 
 # General cleanup
 rm -f $input_path/etc/ssh/ssh_host_*
@@ -28,7 +33,7 @@ rm -f $input_path/etc/ssh/moduli
 
 case "$input_distri" in
 	debian|ubuntu)
-		# Each individual VE should have its own pair of SSH host keys. 
+		# Each individual VE should have its own pair of SSH host keys.
 		# The code below will wipe out the existing SSH keys and instruct the newly-created VE to create new SSH keys on first boot.
 cat << EOF > ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
 #!/bin/sh
@@ -50,16 +55,21 @@ EOF
 		> lastlog; > faillog; > wtmp
 		> auth.log; > cron.log; > daemon.log; > debug; > dmesg; > mail.log; > messages; > syslog; > user.log
 		> emerge-fetch.log; > emerge.log; > portage/elog/summary.log
-		cd $input_path/usr/portage/distfiles/
-		rm -ri *
+		dialog --yesno "Wipe out $input_path/usr/portage/distfiles/* ?" 0 0
+		if [ $? -eq 0 ]; then
+			rm -rf "$input_path/usr/portage/distfiles/*"
+		fi
 		cd $input_path/root/
 		> .bash_history
-		rm -ri .ssh
+		dialog --yesno "Wipe out $input_path/root/.ssh/* ?" 0 0
+		if [ $? -eq 0 ]; then
+			rm -rf "$input_path/root/.ssh/*"
+		fi
 		;; #END gentoo
 	*)
 		exit 0;
 		;; esac
 
-cd $input_path 
+cd $input_path
 tar --numeric-owner -zcf ~/${input_template_name}.tar.gz . 2>/dev/null
- dialog --no-cancel --msgbox "$input_template_name.tar.gz saved under ~/" 5 42
+dialog --no-cancel --msgbox "$input_template_name.tar.gz saved under ~/" 5 42

@@ -12,9 +12,9 @@ ln -s /proc/mounts /etc/mtab
 ln -s /etc/init.d/net.lo /etc/init.d/net.venet0
 rc-update add net.venet0 default
 rc-update add sshd default
-echo "- Addes net.venet0 and sshd to default runlevel" > /root/template-doc/change.log
+echo "- Added net.venet0 and sshd to default runlevel" > /root/template-doc/change.log
 
-unmount /dev #ensure that we create the nodes inside the template filesystem and not somwere else (eg. on the host filesystem)
+unmount /dev >/dev/null 2>&1 #ensure that we create the nodes inside the template filesystem and not somwere else (eg. on the host filesystem)
 mkdir -p /dev/net
 mknod /dev/net/tun c 10 200
 chmod 600 /dev/net/tun
@@ -179,17 +179,24 @@ locale-gen
 ################################## Portage auf Vordermann bringen ###########################
 #############################################################################################
 
-clear
-eselect profile list
-echo ""
-echo ""
-echo "Please choose profile number"
-read input_profile
-eselect profile set ${input_profile}
+#Returnwert von nicht null erzeugen
+ls /tmp/$$/$$ >/dev/null 2>&1
+
+until [ $? -eq 0]; do
+	clear
+	eselect profile list
+	echo ""
+	echo ""
+	echo "Please choose profile number"
+	read input_profile
+	eselect profile set ${input_profile}
+done
 
 emerge --sync
 emerge -u portage
 emerge -u gentoolkit
 
-# Thats all
-umount /proc
+dialog --yesno "Emerge sys-apps/iproute2 (Recommended for IPv6)?" 0 0
+if [ $? -eq 0 ]; then
+	emerge -u sys-apps/iproute2
+fi
