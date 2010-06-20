@@ -67,6 +67,6 @@ EOF
 		fi
 		;; esac #END gentoo
 
-cd $input_path_default
+cd $input_path
 tar --numeric-owner -zcf ~/${input_template_name}.tar.gz . 2>/dev/null
 dialog --no-cancel --msgbox "$input_template_name.tar.gz \ saved under ~/" 5 42
