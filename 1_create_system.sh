@@ -34,9 +34,9 @@ dialog --no-cancel --menu  "Which nameserver want you use for your template?" 10
 	input_nameserver=`cat /tmp/input_nameserver.tmp`
 
 # clean umount
-umount $input_path/dev 2>/dev/null
-umount $input_path/proc 2>/dev/null
-umount $input_path/sys 2>/dev/null
+umount $input_path/dev >/dev/null 2>&1
+umount $input_path/proc >/dev/null 2>&1
+umount $input_path/sys >/dev/null 2>&1
 
 # clear/create the path
 if [ -f $input_path ]; then
