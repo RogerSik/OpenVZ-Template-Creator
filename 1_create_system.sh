@@ -47,11 +47,9 @@ fi
 if [ -d $input_path ]; then
 	dialog --yesno "Will delete everithing in $input_path\nProceed?" 0 0
 	if [ $? -ne 0 ]; then
-		echo "leave it"
 		clear
 		exit 0
 	fi
-	echo "remove it"
 	rm -rf $input_path >/dev/null 2>&1
 fi
 
