@@ -41,21 +41,21 @@ umount $input_path/sys >/dev/null 2>&1
 # clear/create the path
 if [ -f $input_path ]; then
 	echo ${input_path}" is a file, aborting." 1>&2
-	exit 1;
-else
-	if [ -d $input_path ]; then
-		dialog --yesno "Will delete everithing in $input_path\nProceed?" 0 0
-		if [ $? -ne 0 ]; then
-			clear
-			exit 0
-		else
-			rm -rf "$input_path/*"
-		fi
-	fi
-	else
-		mkdir $input_path
-	fi
+	exit 1
 fi
+
+if [ -d $input_path ]; then
+	dialog --yesno "Will delete everithing in $input_path\nProceed?" 0 0
+	if [ $? -ne 0 ]; then
+		echo "leave it"
+		clear
+		exit 0
+	fi
+	echo "remove it"
+	rm -rf $input_path >/dev/null 2>&1
+fi
+
+mkdir -p $input_path
 
 case "$input_distri" in
      hardy|intrepid|jaunty|karmic|lucid|lenny)
