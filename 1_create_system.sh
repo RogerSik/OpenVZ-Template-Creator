@@ -50,6 +50,7 @@ else
 			exit 0
 		else
 			rm -rf "$input_path/*"
+		fi
 	fi
 	else
 		mkdir $input_path
