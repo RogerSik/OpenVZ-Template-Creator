@@ -3,6 +3,12 @@
 # OpenVZ Template OS Creator [upgrade skript]
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
+echo -e "\e[00;31m WARNING\e[00m"
+echo "When the question come to restart the system so answer with NO!!!"
+echo "another this script dont install all fixes like example the ssh fix"
+echo ""
+echo "To begin now press anykey"
+read inpuut_warning
 
 mkdir /etc/init/
 cat << EOF > /etc/init/openvz.conf
