@@ -32,7 +32,7 @@ rm -f $input_path/etc/ssh/ssh_host_*
 rm -f $input_path/etc/ssh/moduli
 
 case "$input_distri" in
-	debian|ubuntu)
+	Debian|Ubuntu)
 		# Each individual VE should have its own pair of SSH host keys.
 		# The code below will wipe out the existing SSH keys and instruct the newly-created VE to create new SSH keys on first boot.
 cat << EOF > ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
@@ -48,7 +48,7 @@ EOF
 		cd $input_path/var/log
 		> aptitude; > messages; > auth.log; > kern.log; > bootstrap.log
 		> dpkg.log; > syslog; > daemon.log; > apt/term.log; > faillog; > lastlog; > wtmp 
-		rm -f $input_path/var/log/*.0 $input_path/var/log/*.1
+		rm -f $input_path/var/log/*.0 $input_path/var/log/*.1 $input_path/*.gz
 		;; #END debian|ubuntu
 	gentoo)
 		cd $input_path/var/log/
