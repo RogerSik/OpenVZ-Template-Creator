@@ -50,7 +50,7 @@ EOF
 		> dpkg.log; > syslog; > daemon.log; > apt/term.log; > faillog; > lastlog; > wtmp 
 		rm -f $input_path/var/log/*.0 $input_path/var/log/*.1 $input_path/*.gz
 		;; #END debian|ubuntu
-	gentoo)
+	Gentoo)
 		cd $input_path/var/log/
 		> lastlog; > faillog; > wtmp
 		> auth.log; > cron.log; > daemon.log; > debug; > dmesg; > mail.log; > messages; > syslog; > user.log
