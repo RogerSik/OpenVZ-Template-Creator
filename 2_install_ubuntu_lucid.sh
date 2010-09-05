@@ -54,7 +54,7 @@ deb-src http://de.archive.ubuntu.com/ubuntu lucid-security main restricted unive
 #deb-src http://de.archive.ubuntu.com/ubuntu lucid-backports main #restricted universe multiverse
 EOF
 
-source ./2_install_ubuntu_lucid.sh
+source ./10_distri_install_packages.sh
 apt-get install gpgv nano --force-yes -y
 apt-get update
 apt-get dist-upgrade -y --force-yes
