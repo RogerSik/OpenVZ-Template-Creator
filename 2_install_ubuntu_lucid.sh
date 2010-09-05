@@ -54,10 +54,11 @@ deb-src http://de.archive.ubuntu.com/ubuntu lucid-security main restricted unive
 #deb-src http://de.archive.ubuntu.com/ubuntu lucid-backports main #restricted universe multiverse
 EOF
 
+source ./2_install_ubuntu_lucid.sh
 apt-get install gpgv nano --force-yes -y
 apt-get update
 apt-get dist-upgrade -y --force-yes
-apt-get install anacron aptitude bc language-pack-en language-pack-de bash-completion inetutils-ping logrotate ssh sshfs syslog-ng lsof man nano quota rsync vim wget whiptail -y --force-yes
+apt-get install $ubuntu_lucid_packages -y --force-yes
 apt-get clean
 apt-get autoremove
 
