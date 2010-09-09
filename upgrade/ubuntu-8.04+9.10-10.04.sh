@@ -56,6 +56,10 @@ do-release-upgrade
 echo "mountall hold"|dpkg --set-selections
 echo "upstart hold"|dpkg --set-selections
 
+# Removing of broken scripts
+cd /etc/init/
+rm -f console* control* hwclock* module* mount* network-interface* plymouth* procps* tty* udev* upstart*
+
 # modprobe fix
 rm /sbin/modprobe
 ln -s /bin/true /sbin/modprobe
