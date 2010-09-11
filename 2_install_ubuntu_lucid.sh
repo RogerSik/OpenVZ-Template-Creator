@@ -36,6 +36,7 @@ start networking
 initctl emit filesystem --no-wait
 initctl emit local-filesystems --no-wait
 initctl emit virtual-filesystems --no-wait
+initctl emit net-device-up --no-wait
 init 2
 end script
 EOF
