@@ -54,8 +54,7 @@ apt-get install update-manager-core -y
 do-release-upgrade
 
 # because another a upgrade would begins the booting problems again
-echo "mountall hold"|dpkg --set-selections
-echo "upstart hold"|dpkg --set-selections
+aptitude hold mountall upstart
 
 # Removing of broken scripts
 cd /etc/init/

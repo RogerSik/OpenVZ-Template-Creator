@@ -64,8 +64,7 @@ apt-get clean
 apt-get autoremove
 
 # because another a upgrade would begins the booting problems again
-echo "mountall hold"|dpkg --set-selections
-echo "upstart hold"|dpkg --set-selections
+aptitude hold mountall upstart
 
 # modprobe fix
 rm /sbin/modprobe
