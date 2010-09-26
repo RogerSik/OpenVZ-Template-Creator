@@ -3,38 +3,30 @@
 # OpenVZ Template OS Creator
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
-# Remove not necessary programs 
-apt-get remove --purge -y ubuntu-minimal wpasupplicant wireless-tools \
-  udev pcmciautils initramfs-tools console-setup \
-  xkb-data module-init-tools \
-  console-terminus busybox-initramfs \
-  ntpdate eject pciutils tasksel tasksel-data laptop-detect
 
 rm /etc/event.d/tty*
 rm -fr /lib/udev
 
 cat << EOF > /etc/apt/sources.list
-deb http://de.archive.ubuntu.com/ubuntu jaunty main #restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu jaunty main #restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jaunty main restricted universe multiverse
+deb-src http://de.archive.ubuntu.com/ubuntu jaunty main restricted universe multiverse
  
-deb http://de.archive.ubuntu.com/ubuntu jaunty-updates main #restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu jaunty-updates main #restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jaunty-updates main restricted universe multiverse
+deb-src http://de.archive.ubuntu.com/ubuntu jaunty-updates main restricted universe multiverse
  
-deb http://de.archive.ubuntu.com/ubuntu jaunty-security main #restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu jaunty-security main #restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu jaunty-security main restricted universe multiverse
+deb-src http://de.archive.ubuntu.com/ubuntu jaunty-security main restricted universe multiverse
  
 #deb http://de.archive.ubuntu.com/ubuntu jaunty-backports main #restricted universe multiverse
 #deb-src http://de.archive.ubuntu.com/ubuntu jaunty-backports main #restricted universe multiverse
 EOF
 
-cat << EOF > /etc/fstab
-proc  /proc       proc    defaults    0    0
-none  /dev/pts    devpts  rw          0    0
-EOF
-
+source ./10_distri_install_packages.sh
+apt-get update
+apt-get install gpgv -y --force-yes
 apt-get update
 apt-get dist-upgrade -y
-apt-get install anacron aptitude bc language-pack-en language-pack-de bash-completion logrotate ssh lsof man nano quota rsync vim wget -y
+apt-get install $ubuntu_all -y --force-yes
 apt-get clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 

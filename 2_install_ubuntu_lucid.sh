@@ -56,10 +56,10 @@ deb-src http://de.archive.ubuntu.com/ubuntu lucid-security main restricted unive
 EOF
 
 source ./10_distri_install_packages.sh
-apt-get install gpgv nano --force-yes -y
+apt-get install gpgv --force-yes -y
 apt-get update
 apt-get dist-upgrade -y --force-yes
-apt-get install $ubuntu_lucid_packages -y --force-yes
+apt-get install $ubuntu_all -y --force-yes
 apt-get clean
 apt-get autoremove
 

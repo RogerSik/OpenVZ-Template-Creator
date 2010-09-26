@@ -18,8 +18,7 @@ dialog --no-cancel --menu  "Which distribution want you build?" 15 50 7 \
 
 if [ $input_distri != "gentoo" ]; then
 	dialog --no-cancel --menu "What is your host?" 10 30 3  \
-		"Debian" . \
-		"Ubuntu" . \
+		"Debian/Ubuntu" . \
 		"None of both" . 2>/tmp/input_host.tmp
 	input_host=`cat /tmp/input_host.tmp`
 fi
@@ -45,7 +44,7 @@ if [ -f $input_path ]; then
 fi
 
 if [ -d $input_path ]; then
-	dialog --yesno "Will delete everithing in $input_path\nProceed?" 0 0
+	dialog --yesno "Will delete everything in $input_path\nProceed?" 0 0
 	if [ $? -ne 0 ]; then
 		clear
 		exit 0
@@ -58,7 +57,7 @@ mkdir -p $input_path
 case "$input_distri" in
      hardy|intrepid|jaunty|karmic|lucid|lenny)
 		case "$input_host" in
-		     Debian|Ubuntu)
+		     Debian/Ubuntu)
 				echo "Download and installation the latest debootstrap."
 				wget http://files.openvz-tc.org/debs/debootstrap.deb
 				dpkg -i debootstrap.deb

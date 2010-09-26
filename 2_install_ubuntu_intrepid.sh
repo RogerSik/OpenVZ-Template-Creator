@@ -3,33 +3,30 @@
 # OpenVZ Template OS Creator
 # http://github.com/RogerSik/OpenVZ-Template-Creator
 #
-# Remove not necessary programs
-apt-get remove --purge -y ubuntu-minimal wpasupplicant wireless-tools \
-  udev pcmciautils initramfs-tools console-setup \
-  xkb-data module-init-tools \
-  console-terminus busybox-initramfs libvolume-id0 \
-  ntpdate eject pciutils tasksel tasksel-data laptop-detect
 
 rm /etc/event.d/tty*
 rm -fr /lib/udev
 
 cat << EOF > /etc/apt/sources.list
-deb http://de.archive.ubuntu.com/ubuntu intrepid main #restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu intrepid main #restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu intrepid main restricted universe multiverse
+deb-src http://de.archive.ubuntu.com/ubuntu intrepid main restricted universe multiverse
  
-deb http://de.archive.ubuntu.com/ubuntu intrepid-updates main #restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu intrepid-updates main #restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu intrepid-updates main restricted universe multiverse
+deb-src http://de.archive.ubuntu.com/ubuntu intrepid-updates main restricted universe multiverse
  
-deb http://de.archive.ubuntu.com/ubuntu intrepid-security main #restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu intrepid-security main #restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu intrepid-security main restricted universe multiverse
+deb-src http://de.archive.ubuntu.com/ubuntu intrepid-security main restricted universe multiverse
  
 #deb http://de.archive.ubuntu.com/ubuntu intrepid-backports main #restricted universe multiverse
 #deb-src http://de.archive.ubuntu.com/ubuntu intrepid-backports main #restricted universe multiverse
 EOF
 
+source ./10_distri_install_packages.sh
+apt-get update
+apt-get install aptitude gpgv -y --force-yes
 apt-get update
 apt-get dist-upgrade -y
-apt-get install anacron aptitude bc language-pack-en language-pack-de bash-completion logrotate ssh lsof man nano quota rsync vim wget -y
+apt-get install $ubuntu_all -y
 apt-get clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
@@ -50,7 +47,7 @@ echo "127.0.0.1 localhost.localdomain localhost" > /etc/hosts
 # Note: the warning "/sbin/MAKEDEV: warning: can't read /proc/devices" is safe to ignore.
 cd /dev && /sbin/MAKEDEV ptyp && cd /
 
-# Because klogd will hang up the system
+# disable some unnecessary boot scripts
 update-rc.d -f klogd remove
 
 #umount /dev

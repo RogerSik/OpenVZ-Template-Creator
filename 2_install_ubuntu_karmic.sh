@@ -53,9 +53,11 @@ deb-src http://de.archive.ubuntu.com/ubuntu karmic-security main #restricted uni
 #deb-src http://de.archive.ubuntu.com/ubuntu karmic-backports main #restricted universe multiverse
 EOF
 
+source ./10_distri_install_packages.sh
 apt-get update
+apt-get install gpgv -y --force-yes
 apt-get dist-upgrade -y
-apt-get install anacron aptitude bc language-pack-en language-pack-de bash-completion logrotate ssh sshfs lsof man nano quota rsync vim wget -y
+apt-get install $ubuntu_all -y --force-yes
 apt-get clean
 
 # Link /etc/mtab to /proc/mounts, so df and friends will work: 
