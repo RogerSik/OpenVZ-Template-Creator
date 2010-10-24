@@ -7,6 +7,6 @@ ubuntu_all='anacron aptitude
         man nano
 	quota
         rsync 
-        ssh sshfs syslog-ng
+        ssh sshfs sudo syslog-ng
         vim wget whiptail'
 

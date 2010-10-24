@@ -53,7 +53,7 @@ deb-src http://de.archive.ubuntu.com/ubuntu karmic-security main #restricted uni
 #deb-src http://de.archive.ubuntu.com/ubuntu karmic-backports main #restricted universe multiverse
 EOF
 
-source ./10_distri_install_packages.sh
+source ./5_distri_install_packages.sh
 apt-get update
 apt-get install gpgv -y --force-yes
 apt-get dist-upgrade -y

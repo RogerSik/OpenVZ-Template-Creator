@@ -42,17 +42,17 @@ end script
 EOF
 
 cat << EOF > /etc/apt/sources.list
-deb http://de.archive.ubuntu.com/ubuntu lucid main restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu lucid main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu maverick main restricted universe multiverse
+deb-src http://de.archive.ubuntu.com/ubuntu maverick main restricted universe multiverse
 
-deb http://de.archive.ubuntu.com/ubuntu lucid-updates main restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu lucid-updates main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu maverick-updates main restricted universe multiverse
+deb-src http://de.archive.ubuntu.com/ubuntu maverick-updates main restricted universe multiverse
 
-deb http://de.archive.ubuntu.com/ubuntu lucid-security main restricted universe multiverse
-deb-src http://de.archive.ubuntu.com/ubuntu lucid-security main restricted universe multiverse
+deb http://de.archive.ubuntu.com/ubuntu maverick-security main restricted universe multiverse
+deb-src http://de.archive.ubuntu.com/ubuntu maverick-security main restricted universe multiverse
 
-#deb http://de.archive.ubuntu.com/ubuntu lucid-backports main #restricted universe multiverse
-#deb-src http://de.archive.ubuntu.com/ubuntu lucid-backports main #restricted universe multiverse
+#deb http://de.archive.ubuntu.com/ubuntu maverick-backports main #restricted universe multiverse
+#deb-src http://de.archive.ubuntu.com/ubuntu maverick-backports main #restricted universe multiverse
 EOF
 
 source ./5_distri_install_packages.sh
@@ -75,7 +75,7 @@ sed -i -e 's_oom never_#oom never_g' /etc/init/ssh.conf
 
 # Removing of broken scripts
 cd /etc/init/
-rm -f console* control* hwclock* module* mount* network-interface* plymouth* procps* tty* udev* upstart*
+rm -f cron console* control* hwclock* module* mount* network-interface* plymouth* procps* tty* udev* upstart*
 
 # network
 echo "hostname" > /etc/hostname

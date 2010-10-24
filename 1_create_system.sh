@@ -7,11 +7,9 @@ license=`dirname $0`"/LICENSE"
 dialog --title "OpenVZ Template Creator" --textbox ${license} 20 80
 
 dialog --no-cancel --menu  "Which distribution want you build?" 15 50 7 \
-	hardy "Ubuntu 8.04 - Hardy Heron"  \
-	intrepid "Ubuntu 8.10 - Intrepid Ibex"  \
-	jaunty "Ubuntu 9.04 - Jaunty  Jackalope"  \
 	karmic "Ubuntu 9.10 - Karmic Koala"   \
 	lucid "Ubuntu 10.04 - Lucid Lync"  \
+	maverick "Ubuntu 10.10 - Maverick Meerkat" \
 	gentoo "Gentoo Linux (stage3)"  \
 	lenny "Debian 5 - Lenny" 2>/tmp/input_distri.tmp
 	input_distri=`cat /tmp/input_distri.tmp`
@@ -55,7 +53,7 @@ fi
 mkdir -p $input_path
 
 case "$input_distri" in
-     hardy|intrepid|jaunty|karmic|lucid|lenny)
+     karmic|lucid|maverick|lenny)
 		case "$input_host" in
 		     Debian/Ubuntu)
 				echo "Download and installation the latest debootstrap."

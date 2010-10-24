@@ -12,8 +12,7 @@ dialog --no-cancel --inputbox "Where is the new system? (default /mnt/dice)" 8 5
 	input_path=`cat /tmp/input_path.tmp`
 
 dialog --no-cancel --menu  "Which distribution want you cleanup?" 10 40 3 \
-	"Debian" "."  \
-	"Ubuntu" "."  \
+	"Debian/Ubuntu" "."  \
 	"Gentoo" "." 2>/tmp/input_distri.tmp
 	input_distri=`cat /tmp/input_distri.tmp`
 
@@ -32,7 +31,7 @@ rm -f $input_path/etc/ssh/ssh_host_*
 rm -f $input_path/etc/ssh/moduli
 
 case "$input_distri" in
-	Debian|Ubuntu)
+	Debian/Ubuntu)
 		# Each individual VE should have its own pair of SSH host keys.
 		# The code below will wipe out the existing SSH keys and instruct the newly-created VE to create new SSH keys on first boot.
 cat << EOF > ${input_path}/etc/rc2.d/S15ssh_gen_host_keys
