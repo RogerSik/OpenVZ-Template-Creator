@@ -28,9 +28,6 @@ Polish). In such a case, I take order for creating the asked
 distribution and script. Only condition set for the script is that it is
 licensed under the GNU GPLv3. Price for the order are negotiable.
 
-# Donate
-<a href="http://pledgie.com/campaigns/11129">Donate button</a>
-
 # Powered by
 <a href="http://www.carrot-server.com/"><img src="http://yoschi.cc/wp-content/uploads/carrot-server.png"></a>
 

@@ -6,10 +6,10 @@
 license=`dirname $0`"/LICENSE"
 dialog --title "OpenVZ Template Creator" --textbox ${license} 20 80
 
-dialog --no-cancel --menu  "Which distribution want you build?" 15 50 7 \
-	karmic "Ubuntu 9.10 - Karmic Koala"   \
+dialog --no-cancel --menu  "Which distribution want you build?" 15 50 5 \
 	lucid "Ubuntu 10.04 - Lucid Lync"  \
 	maverick "Ubuntu 10.10 - Maverick Meerkat" \
+	natty "Ubuntu 11.04 - Natty Narwhal" \
 	gentoo "Gentoo Linux (stage3)"  \
 	lenny "Debian 5 - Lenny" 2>/tmp/input_distri.tmp
 	input_distri=`cat /tmp/input_distri.tmp`
@@ -53,10 +53,10 @@ fi
 mkdir -p $input_path
 
 case "$input_distri" in
-     karmic|lucid|maverick|lenny)
+     karmic|lucid|maverick|natty|lenny)
 		case "$input_host" in
 		     Debian/Ubuntu)
-				echo "Download and installation the latest debootstrap."
+				echo "Download and install the latest debootstrap."
 				wget http://files.openvz-tc.org/debs/debootstrap.deb
 				dpkg -i debootstrap.deb
 				rm debootstrap.deb
