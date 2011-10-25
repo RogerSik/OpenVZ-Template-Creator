@@ -17,17 +17,3 @@ optional
 1. In order to install the tools and create the distri, one has to start '1_create_system.sh'
 2. Now you'll be chrooted into the system and you need to execute "2_install_$distri_$codename.sh" in order to install and configure other programs which are needed
 3. As a last step execute the 3_cleanup_system.sh to clean up (clear logs, etc.)
-
-## Download of already created templates
-<a href="http://files.openvz-tc.org/templates">Here</a> can you download templates that are created with this Creator.
-
-# Seeking for distributions which aren't listed here yet.
-If there is a distribution you want to be added to the OpenVZ TC project
-please get in touch with me: Roger roger@sikorski.cc (English, German &
-Polish). In such a case, I take order for creating the asked
-distribution and script. Only condition set for the script is that it is
-licensed under the GNU GPLv3. Price for the order are negotiable.
-
-# Powered by
-<a href="http://www.carrot-server.com/"><img src="http://yoschi.cc/wp-content/uploads/carrot-server.png"></a>
-
